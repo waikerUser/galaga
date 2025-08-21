@@ -7,6 +7,8 @@ module.exports = {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    publicPath:
+      process.env.NODE_ENV === 'production' ? '/갤러그게임저장소이름/' : '/',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -56,4 +58,10 @@ module.exports = {
     hot: true,
   },
   devtool: 'source-map',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+    minimize: true,
+  },
 };
