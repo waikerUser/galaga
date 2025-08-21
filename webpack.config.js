@@ -7,7 +7,7 @@ module.exports = {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    publicPath: '/galaga/', // 저장소 이름과 일치시켜야 함!
+    publicPath: '/', // 루트 경로로 변경!
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
