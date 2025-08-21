@@ -7,8 +7,7 @@ module.exports = {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    publicPath:
-      process.env.NODE_ENV === 'production' ? '/갤러그게임저장소이름/' : '/',
+    publicPath: '/galaga/', // 저장소 이름과 일치시켜야 함!
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
