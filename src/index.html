@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallag Shooting Game</title>
+
+    <!-- Google AdSense Script -->
+    <!-- 실제 운영 시 ca-pub-XXXXXXXXXXXXXXXXX를 본인의 AdSense Publisher ID로 교체하세요 -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- AdSense 자동 광고는 개별 광고 단위와 충돌하므로 제거 -->
+  </head>
+  <body>
+    <!-- 전체 레이아웃 컨테이너 -->
+    <div id="main-layout">
+      <!-- 상단 광고 영역 -->
+      <div id="top-ad-area" class="ad-area">
+        <div id="top-banner-ad" class="ad-container hidden">
+          <ins
+            class="adsbygoogle"
+            style="display: block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+            data-ad-slot="1234567890"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+          <!-- 동적 로딩을 위해 스크립트 제거 -->
+        </div>
+      </div>
+
+      <!-- 좌측 광고 영역 -->
+      <div id="left-ad-area" class="ad-area">
+        <div id="sidebar-ad-left" class="sidebar-ad hidden">
+          <ins
+            class="adsbygoogle"
+            style="display: block; width: 160px; height: 600px"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+            data-ad-slot="0987654321"
+            data-ad-format="rectangle"
+          ></ins>
+          <!-- 동적 로딩을 위해 스크립트 제거 -->
+        </div>
+      </div>
+
+      <!-- 게임 중앙 영역 -->
+      <div id="game-center-area">
+        <div id="game-container">
+          <div id="game-ui">
+            <div id="score-display">점수: <span id="score">0</span></div>
+            <div id="stage-display">스테이지: <span id="stage">1</span></div>
+            <div id="lives-display">생명: <span id="lives">3</span></div>
+            <div id="powerup-info">
+              <div id="missile-level">
+                🚀 미사일: <span id="missile-count">1</span>발
+                <span id="missile-tier">T1</span>
+              </div>
+              <div id="items-collected">
+                📦 수집: <span id="items-count">0</span>개
+              </div>
+            </div>
+            <div id="performance-info">
+              <div id="bullet-pool">
+                ⚡ 풀: <span id="pool-active">0</span>/<span id="pool-total"
+                  >150</span
+                >
+              </div>
+            </div>
+            <div id="player-status">
+              <div id="power-up-status" class="hidden">
+                ⚡ POWER UP! <span id="power-up-time">10</span>초
+              </div>
+              <div id="shield-status" class="hidden">
+                🛡️ SHIELD <span id="shield-hits">3</span>회
+              </div>
+            </div>
+          </div>
+          <div id="boss-ui" class="hidden">
+            <div id="boss-warning">⚠️ 보스 출현! ⚠️</div>
+            <div id="boss-health-container">
+              <div id="boss-health-label">보스 체력</div>
+              <div id="boss-health-bar">
+                <div id="boss-health-fill"></div>
+              </div>
+            </div>
+          </div>
+          <canvas id="game-canvas" width="800" height="600"></canvas>
+          <div id="game-over" class="hidden">
+            <h2>게임 오버!</h2>
+            <p>최종 점수: <span id="final-score">0</span></p>
+            <button id="restart-btn">다시 시작</button>
+          </div>
+          <div id="start-screen">
+            <h1>Gallag Shooting Game</h1>
+            <p>방향키로 이동하고 스페이스바로 발사하세요!</p>
+            <button id="start-btn">게임 시작</button>
+          </div>
+          <div id="difficulty-screen" class="hidden">
+            <h2>난이도 선택</h2>
+            <div class="difficulty-buttons">
+              <button id="easy-btn" class="difficulty-btn">
+                <span class="diff-name">쉬움</span>
+                <span class="diff-desc"
+                  >적이 느리고 아이템이 많이 나옵니다</span
+                >
+              </button>
+              <button id="normal-btn" class="difficulty-btn">
+                <span class="diff-name">보통</span>
+                <span class="diff-desc">균형잡힌 게임 플레이</span>
+              </button>
+              <button id="hard-btn" class="difficulty-btn">
+                <span class="diff-name">어려움</span>
+                <span class="diff-desc">빠른 적과 높은 점수 배율</span>
+              </button>
+            </div>
+            <button id="back-btn">뒤로</button>
+          </div>
+
+          <!-- 레벨업 및 게임 메시지 -->
+          <div id="game-message" class="hidden">
+            <div id="message-text">LEVEL UP!</div>
+            <div id="message-subtext">레벨 2 시작</div>
+          </div>
+
+          <!-- 보스 등장 연출 -->
+          <div id="boss-intro" class="hidden">
+            <div id="boss-intro-text">WARNING!</div>
+            <div id="boss-intro-subtext">보스가 등장합니다!</div>
+          </div>
+        </div>
+        <!-- game-container 닫기 -->
+      </div>
+      <!-- game-center-area 닫기 -->
+
+      <!-- 우측 광고 영역 -->
+      <div id="right-ad-area" class="ad-area">
+        <div id="sidebar-ad-right" class="sidebar-ad hidden">
+          <ins
+            class="adsbygoogle"
+            style="display: block; width: 160px; height: 600px"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+            data-ad-slot="1122334455"
+            data-ad-format="rectangle"
+          ></ins>
+          <!-- 동적 로딩을 위해 스크립트 제거 -->
+        </div>
+      </div>
+
+      <!-- 하단 광고 영역 -->
+      <div id="bottom-ad-area" class="ad-area">
+        <div id="bottom-banner-ad" class="ad-container hidden">
+          <ins
+            class="adsbygoogle"
+            style="display: block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+            data-ad-slot="2233445566"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+          <!-- 동적 로딩을 위해 스크립트 제거 -->
+        </div>
+      </div>
+
+      <!-- 인터스티셜 광고 (게임 오버 후) -->
+      <div id="interstitial-ad" class="ad-overlay hidden">
+        <div class="ad-overlay-content">
+          <h3>잠깐! 광고를 시청해주세요</h3>
+          <div class="ad-unit">
+            <ins
+              class="adsbygoogle"
+              style="display: block; width: 320px; height: 480px"
+              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+              data-ad-slot="9988776655"
+              data-ad-format="auto"
+            ></ins>
+            <!-- 동적 로딩을 위해 스크립트 제거 -->
+          </div>
+          <button id="close-ad" class="close-ad-btn">광고 닫기 (5초)</button>
+        </div>
+      </div>
+
+      <!-- 보상형 광고 오버레이 -->
+      <div id="reward-ad-overlay" class="ad-overlay hidden">
+        <div class="ad-overlay-content">
+          <h3>🎁 보상을 받으시겠습니까?</h3>
+          <p>광고를 시청하고 특별한 보상을 받아보세요!</p>
+          <div class="reward-options">
+            <div class="reward-option" data-reward="powerup">
+              <span class="reward-icon">⚡</span>
+              <span class="reward-text">Power Up</span>
+            </div>
+            <div class="reward-option" data-reward="life">
+              <span class="reward-icon">❤️</span>
+              <span class="reward-text">생명 +1</span>
+            </div>
+            <div class="reward-option" data-reward="shield">
+              <span class="reward-icon">🛡️</span>
+              <span class="reward-text">Shield</span>
+            </div>
+          </div>
+          <div class="reward-ad-unit">
+            <ins
+              class="adsbygoogle"
+              style="display: block; width: 300px; height: 250px"
+              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+              data-ad-slot="5566778899"
+              data-ad-format="rectangle"
+            ></ins>
+            <!-- 동적 로딩을 위해 스크립트 제거 -->
+          </div>
+          <div class="reward-buttons">
+            <button id="watch-reward-ad" class="reward-btn">
+              광고 시청하기
+            </button>
+            <button id="skip-reward-ad" class="skip-btn">건너뛰기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- main-layout 닫기 -->
+  </body>
+</html>

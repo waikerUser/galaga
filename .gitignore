@@ -1,0 +1,123 @@
+# ========================================
+# Gallag Shooting Game - .gitignore
+# ========================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production builds
+/dist
+/build
+*.tgz
+*.tar.gz
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# TypeScript
+*.tsbuildinfo
+*.d.ts.map
+
+# Webpack
+.cache/
+*.hot-update.*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary files
+.tmp/
+.temp/
+*.tmp
+*.temp
+
+# AdSense and Analytics (실제 키가 들어갈 수 있는 파일들)
+config/adsense.js
+config/analytics.js
+*.key
+*.pem
+
+# Game assets backup (용량이 클 수 있는 에셋 백업들)
+assets/backup/
+assets/raw/
+*.psd
+*.ai
+*.sketch
+
+# Performance and debugging
+*.cpuprofile
+*.heapsnapshot
+
+# Package manager lock files (선택적 - 팀 정책에 따라)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Local configuration
+config.local.js
+settings.local.json
+
+# Build artifacts
+*.manifest
+*.cache
+
+# Test coverage
+/coverage
+/.nyc_output
+
+# ESLint cache
+.eslintcache
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test

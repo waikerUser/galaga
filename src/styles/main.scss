@@ -1,0 +1,791 @@
+// 기본 색상 팔레트
+$primary-color: #00ff00;
+$secondary-color: #ff0080;
+$background-color: #000011;
+$text-color: #ffffff;
+$ui-background: rgba(0, 0, 0, 0.8);
+$button-hover: #333;
+
+// 기본 스타일 리셋
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, $background-color 0%, #000033 100%);
+  font-family: 'Courier New', monospace;
+  color: $text-color;
+  overflow-x: hidden;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+// ========================================
+// 메인 그리드 레이아웃
+// ========================================
+
+#main-layout {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 180px 1fr 180px;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'top top top'
+    'left center right'
+    'bottom bottom bottom';
+  gap: 10px;
+  padding: 10px;
+
+  // 반응형: 모바일에서는 광고를 상하단만 표시
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      'top'
+      'center'
+      'bottom';
+    gap: 5px;
+    padding: 5px;
+  }
+}
+
+// 광고 영역 정의
+.ad-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#top-ad-area {
+  grid-area: top;
+}
+
+#left-ad-area {
+  grid-area: left;
+
+  @media (max-width: 1024px) {
+    display: none; // 모바일에서 숨김
+  }
+}
+
+#game-center-area {
+  grid-area: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 600px;
+}
+
+#right-ad-area {
+  grid-area: right;
+
+  @media (max-width: 1024px) {
+    display: none; // 모바일에서 숨김
+  }
+}
+
+#bottom-ad-area {
+  grid-area: bottom;
+}
+
+#game-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid $primary-color;
+  border-radius: 10px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px $primary-color;
+
+  #game-canvas {
+    border: 1px solid $primary-color;
+    background: #000000; // 순수한 우주 공간 검은색
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);
+  }
+
+  #game-ui {
+    display: flex;
+    justify-content: space-between;
+    width: 800px;
+    padding: 10px;
+    background: $ui-background;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+
+    #score-display,
+    #lives-display {
+      color: $primary-color;
+      text-shadow: 0 0 5px $primary-color;
+    }
+
+    #stage-display {
+      color: #ffaa00;
+      text-shadow: 0 0 5px #ffaa00;
+    }
+
+    #powerup-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 14px;
+      text-align: right;
+
+      #missile-level {
+        color: #00ffff;
+        text-shadow: 0 0 3px #00ffff;
+
+        #missile-tier {
+          color: #ffff00;
+          font-weight: normal;
+          margin-left: 5px;
+        }
+      }
+
+      #items-collected {
+        color: #ff8800;
+        text-shadow: 0 0 3px #ff8800;
+      }
+    }
+
+    #performance-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 12px;
+      text-align: right;
+
+      #bullet-pool {
+        color: #888888;
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 0 2px #888888;
+      }
+    }
+
+    #player-status {
+      position: absolute;
+      top: 120px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      #power-up-status {
+        background: rgba(255, 215, 0, 0.9);
+        color: #000;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        animation: pulse 1s infinite;
+      }
+
+      #shield-status {
+        background: rgba(0, 191, 255, 0.9);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+      }
+    }
+  }
+
+  #boss-ui {
+    width: 800px;
+    padding: 10px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+
+    &.hidden {
+      display: none;
+    }
+
+    #boss-warning {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #ff0000;
+      margin-bottom: 10px;
+      animation: blink 1s infinite;
+    }
+
+    #boss-health-container {
+      #boss-health-label {
+        color: #ffffff;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      #boss-health-bar {
+        width: 100%;
+        height: 20px;
+        background: #330000;
+        border: 2px solid #ff0000;
+        border-radius: 10px;
+        overflow: hidden;
+
+        #boss-health-fill {
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            #ff0000 0%,
+            #ffaa00 50%,
+            #ff0000 100%
+          );
+          transition: width 0.3s ease;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    51%,
+    100% {
+      opacity: 0.3;
+    }
+  }
+
+  #start-screen,
+  #difficulty-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: $ui-background;
+    padding: 40px;
+    border-radius: 10px;
+    border: 2px solid $primary-color;
+    box-shadow: 0 0 20px $primary-color;
+    z-index: 100;
+
+    h1,
+    h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: $primary-color;
+      text-shadow: 0 0 10px $primary-color;
+    }
+
+    h2 {
+      font-size: 28px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 30px;
+      color: $text-color;
+    }
+
+    button {
+      background: transparent;
+      border: 2px solid $primary-color;
+      color: $primary-color;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: $primary-color;
+        color: $background-color;
+        box-shadow: 0 0 10px $primary-color;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+  #difficulty-screen {
+    .difficulty-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .difficulty-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-width: 300px;
+
+      .diff-name {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .diff-desc {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      &:hover {
+        .diff-name {
+          text-shadow: 0 0 5px currentColor;
+        }
+      }
+    }
+
+    #easy-btn {
+      border-color: #00ff88;
+      color: #00ff88;
+
+      &:hover {
+        background: #00ff88;
+        box-shadow: 0 0 10px #00ff88;
+      }
+    }
+
+    #normal-btn {
+      border-color: #ffaa00;
+      color: #ffaa00;
+
+      &:hover {
+        background: #ffaa00;
+        box-shadow: 0 0 10px #ffaa00;
+      }
+    }
+
+    #hard-btn {
+      border-color: #ff4444;
+      color: #ff4444;
+
+      &:hover {
+        background: #ff4444;
+        box-shadow: 0 0 10px #ff4444;
+      }
+    }
+
+    #back-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+
+  #game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: $ui-background;
+    padding: 40px;
+    border-radius: 10px;
+    border: 2px solid $secondary-color;
+    box-shadow: 0 0 20px $secondary-color;
+    z-index: 100;
+
+    &.hidden {
+      display: none;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: $secondary-color;
+      text-shadow: 0 0 10px $secondary-color;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      color: $text-color;
+    }
+
+    button {
+      background: transparent;
+      border: 2px solid $secondary-color;
+      color: $secondary-color;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: $secondary-color;
+        color: $background-color;
+        box-shadow: 0 0 10px $secondary-color;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+// 반응형 디자인
+// 게임 메시지 (레벨업 등)
+#game-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.9);
+  border: 3px solid $primary-color;
+  border-radius: 15px;
+  padding: 30px 50px;
+  box-shadow: 0 0 20px $primary-color;
+
+  #message-text {
+    font-size: 48px;
+    font-weight: bold;
+    color: $primary-color;
+    text-shadow: 0 0 10px $primary-color;
+    margin-bottom: 10px;
+    animation: pulse 1s infinite;
+  }
+
+  #message-subtext {
+    font-size: 20px;
+    color: #ffffff;
+    text-shadow: 0 0 5px #ffffff;
+  }
+}
+
+// 보스 등장 연출
+#boss-intro {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  text-align: center;
+  background: rgba(255, 0, 0, 0.95);
+  border: 4px solid #ff0000;
+  border-radius: 20px;
+  padding: 40px 60px;
+  box-shadow: 0 0 30px #ff0000;
+
+  #boss-intro-text {
+    font-size: 56px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 15px #ffffff;
+    margin-bottom: 15px;
+    animation: blink 0.5s infinite;
+  }
+
+  #boss-intro-subtext {
+    font-size: 24px;
+    color: #ffffff;
+    text-shadow: 0 0 8px #ffffff;
+  }
+}
+
+@media (max-width: 900px) {
+  #game-container {
+    padding: 10px;
+    margin: 10px;
+
+    #game-canvas {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+    }
+
+    #game-ui {
+      width: 100%;
+      max-width: 800px;
+    }
+  }
+
+  #game-message,
+  #boss-intro {
+    padding: 20px 30px;
+
+    #message-text,
+    #boss-intro-text {
+      font-size: 32px;
+    }
+
+    #message-subtext,
+    #boss-intro-subtext {
+      font-size: 16px;
+    }
+  }
+}
+
+// ========================================
+// Google AdSense 광고 스타일
+// ========================================
+
+.ad-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 10px auto;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid $primary-color;
+
+  // 개발용 더미 광고 스타일
+  .adsbygoogle {
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px dashed $primary-color;
+    position: relative;
+    min-height: 90px;
+
+    &::after {
+      content: '📺 광고 영역 (개발용)';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: $primary-color;
+      font-size: 14px;
+      pointer-events: none;
+    }
+  }
+}
+
+.sidebar-ad {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  // 사이드바 광고 더미 스타일
+  .adsbygoogle {
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px dashed $primary-color;
+    position: relative;
+    width: 160px;
+    height: 600px;
+
+    &::after {
+      content: '📱 사이드 광고';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-90deg);
+      color: $primary-color;
+      font-size: 12px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  }
+}
+
+.ad-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .ad-overlay-content {
+    background: $ui-background;
+    border: 3px solid $primary-color;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 30px $primary-color;
+    max-width: 500px;
+    width: 90%;
+
+    h3 {
+      color: $primary-color;
+      font-size: 24px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px $primary-color;
+    }
+
+    p {
+      color: $text-color;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .ad-unit {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+
+      // 인터스티셜 광고 더미 스타일
+      .adsbygoogle {
+        background: rgba(255, 0, 0, 0.1);
+        border: 1px dashed $primary-color;
+        position: relative;
+
+        &::after {
+          content: '📺 인터스티셜 광고 (개발용)';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: $primary-color;
+          font-size: 12px;
+          white-space: nowrap;
+          pointer-events: none;
+        }
+      }
+    }
+
+    .close-ad-btn {
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 15px;
+
+      &:hover {
+        background: rgba(255, 0, 0, 1);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// 보상형 광고 전용 스타일
+#reward-ad-overlay {
+  .reward-options {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    gap: 15px;
+
+    .reward-option {
+      background: rgba(0, 255, 0, 0.1);
+      border: 2px solid $primary-color;
+      border-radius: 10px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 80px;
+
+      &:hover {
+        background: rgba(0, 255, 0, 0.2);
+        transform: scale(1.05);
+        box-shadow: 0 0 15px $primary-color;
+      }
+
+      &.selected {
+        background: rgba(0, 255, 0, 0.3);
+        box-shadow: 0 0 20px $primary-color;
+      }
+
+      .reward-icon {
+        font-size: 24px;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .reward-text {
+        font-size: 12px;
+        color: $text-color;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .reward-ad-unit {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+
+    // 보상형 광고 더미 스타일
+    .adsbygoogle {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px dashed $primary-color;
+      position: relative;
+
+      &::after {
+        content: '🎁 보상형 광고 (개발용)';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: $primary-color;
+        font-size: 12px;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .reward-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+
+    .reward-btn {
+      background: rgba(0, 255, 0, 0.8);
+      color: black;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(0, 255, 0, 1);
+        transform: scale(1.05);
+      }
+    }
+
+    .skip-btn {
+      background: rgba(100, 100, 100, 0.8);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(100, 100, 100, 1);
+      }
+    }
+  }
+}
