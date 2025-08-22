@@ -150,6 +150,9 @@ export class GameEngine {
     this.adManager.hideTopBannerAd();
     this.adManager.hideBottomBannerAd();
     this.adManager.hideSidebarAds();
+
+    // 모바일 광고 최적화 적용
+    this.adManager.optimizeAdsForMobile();
   }
 
   private getDifficultyConfig(difficulty: Difficulty): DifficultyConfig {
@@ -197,10 +200,18 @@ export class GameEngine {
   }
 
   private setupUI(): void {
-    // 시작 버튼 이벤트 - 난이도 선택 화면으로 이동
+    // 시작 버튼 이벤트 - 난이도 선택 화면으로 이동 (모바일 터치 지원 추가)
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
       startBtn.addEventListener('click', () => this.showDifficultyScreen());
+      startBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        this.showDifficultyScreen();
+      });
+
+      console.log('🎮 게임 시작 버튼 이벤트 리스너 등록 완료 (클릭 + 터치)');
+    } else {
+      console.warn('⚠️ 게임 시작 버튼을 찾을 수 없습니다!');
     }
 
     // 난이도 선택 버튼들
@@ -211,24 +222,46 @@ export class GameEngine {
 
     if (easyBtn) {
       easyBtn.addEventListener('click', () => this.selectDifficulty('easy'));
+      easyBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        this.selectDifficulty('easy');
+      });
     }
     if (normalBtn) {
       normalBtn.addEventListener('click', () =>
         this.selectDifficulty('normal')
       );
+      normalBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        this.selectDifficulty('normal');
+      });
     }
     if (hardBtn) {
       hardBtn.addEventListener('click', () => this.selectDifficulty('hard'));
+      hardBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        this.selectDifficulty('hard');
+      });
     }
     if (backBtn) {
       backBtn.addEventListener('click', () => this.showStartScreen());
+      backBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        this.showStartScreen();
+      });
     }
 
     // 재시작 버튼 이벤트
     const restartBtn = document.getElementById('restart-btn');
     if (restartBtn) {
       restartBtn.addEventListener('click', () => this.showDifficultyScreen());
+      restartBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        this.showDifficultyScreen();
+      });
     }
+
+    console.log('🎮 모든 게임 버튼에 터치 이벤트 추가 완료');
   }
 
   public startGame(): void {
@@ -344,62 +377,41 @@ export class GameEngine {
       this.stats.levelStartTime = Date.now();
       this.showLevelUpMessage();
 
-      // 레벨 3, 6, 9... 마다 보상 광고 제공
-      if (this.stats.level % 3 === 0) {
-        setTimeout(() => {
-          this.showRewardAdOffer();
-        }, 2000); // 레벨업 메시지 후 2초 뒤
-      }
-
-      console.log(`🎉 레벨 업! 새로운 레벨: ${this.stats.level}`);
+      // 보상형 광고 제거됨 - 레벨업 시 추가 혜택 없음
     }
   }
 
   private showLevelUpMessage(): void {
-    const messageElement = document.getElementById('game-message');
-    const textElement = document.getElementById('message-text');
-    const subtextElement = document.getElementById('message-subtext');
+    const notificationElement = document.getElementById('level-notification');
+    const notificationText = document.getElementById('level-notification-text');
 
-    if (messageElement && textElement && subtextElement) {
-      textElement.textContent = 'LEVEL UP!';
-      subtextElement.textContent = `레벨 ${this.stats.level} 시작`;
+    if (notificationElement && notificationText) {
+      // 알림 텍스트 설정
+      notificationText.textContent = `🎉 레벨 ${this.stats.level}! 🎉`;
 
-      messageElement.classList.remove('hidden');
+      // 기존 애니메이션 클래스 제거 후 다시 추가 (재시작을 위해)
+      notificationElement.style.animation = 'none';
+      notificationElement.classList.remove('hidden');
 
-      // 2초 후 메시지 숨기기
+      // 한 프레임 후 애니메이션 재시작
+      requestAnimationFrame(() => {
+        notificationElement.style.animation =
+          'levelNotificationSlide 3s ease-in-out forwards';
+      });
+
+      // 3초 후 숨기기 (애니메이션 완료 후)
       setTimeout(() => {
-        messageElement.classList.add('hidden');
-      }, 2000);
+        notificationElement.classList.add('hidden');
+      }, 3000);
     }
+
+    console.log(`🎉 레벨 업! 새로운 레벨: ${this.stats.level}`);
   }
 
   private showRewardAdOffer(): void {
-    // 게임 일시 정지
-    const previousState = this.gameState;
-    this.gameState = 'paused';
-
-    this.adManager.showRewardAd((reward: string) => {
-      console.log(`🎁 보상 획득: ${reward}`);
-
-      // 보상 적용
-      switch (reward) {
-        case 'powerup':
-          this.player.applyPowerUp('powerUp');
-          this.showPowerUpMessage('🎁 광고 보상!', '⚡ Power Up 획득!');
-          break;
-        case 'life':
-          this.stats.lives = Math.min(this.stats.lives + 1, 5);
-          this.showPowerUpMessage('🎁 광고 보상!', '❤️ 생명 +1 획득!');
-          break;
-        case 'shield':
-          this.player.applyPowerUp('shield');
-          this.showPowerUpMessage('🎁 광고 보상!', '🛡️ Shield 획득!');
-          break;
-      }
-
-      // 게임 상태 복구
-      this.gameState = previousState;
-    });
+    // 보상형 광고 비활성화됨 - 사용자 요청으로 제거
+    console.log('🎁 보상형 광고 비활성화됨 - 메서드 호출 무시');
+    return;
   }
 
   private spawnInitialWave(): void {
@@ -864,21 +876,30 @@ export class GameEngine {
   }
 
   private showPowerUpMessage(title: string, subtitle: string): void {
-    const messageElement = document.getElementById('game-message');
-    const textElement = document.getElementById('message-text');
-    const subtextElement = document.getElementById('message-subtext');
+    const notificationElement = document.getElementById('level-notification');
+    const notificationText = document.getElementById('level-notification-text');
 
-    if (messageElement && textElement && subtextElement) {
-      textElement.textContent = title;
-      subtextElement.textContent = subtitle;
+    if (notificationElement && notificationText) {
+      // 파워업 알림 텍스트 설정 (간단하게)
+      notificationText.textContent = `${subtitle}`;
 
-      messageElement.classList.remove('hidden');
+      // 기존 애니메이션 중단 후 새로 시작
+      notificationElement.style.animation = 'none';
+      notificationElement.classList.remove('hidden');
 
-      // 1.5초 후 메시지 숨기기
+      // 짧은 애니메이션 적용 (2초)
+      requestAnimationFrame(() => {
+        notificationElement.style.animation =
+          'levelNotificationSlide 2s ease-in-out forwards';
+      });
+
+      // 2초 후 숨기기 (파워업은 더 짧게)
       setTimeout(() => {
-        messageElement.classList.add('hidden');
-      }, 1500);
+        notificationElement.classList.add('hidden');
+      }, 2000);
     }
+
+    console.log(`💪 파워업: ${title} - ${subtitle}`);
   }
 
   private updatePlayerStatusUI(): void {
@@ -933,15 +954,13 @@ export class GameEngine {
     // 사이드바 광고 숨기기
     this.adManager.hideSidebarAds();
 
-    // 게임 오버 후 인터스티셜 광고 표시
-    this.adManager.showInterstitialAd(() => {
-      this.showGameOverScreen();
-      // 상하단 배너 광고 다시 표시
-      this.adManager.showTopBannerAd();
-      this.adManager.showBottomBannerAd();
-    });
+    // 인터스티셜 광고 제거 - 바로 게임오버 화면 표시
+    this.showGameOverScreen();
+    // 상하단 배너 광고 다시 표시
+    this.adManager.showTopBannerAd();
+    this.adManager.showBottomBannerAd();
 
-    console.log('💀 게임 오버 - 인터스티셜 광고 표시');
+    console.log('💀 게임 오버 - 바로 게임오버 화면 표시');
   }
 
   private render(): void {
@@ -1162,5 +1181,43 @@ export class GameEngine {
 
   public destroy(): void {
     this.inputManager.destroy();
+  }
+
+  public handleResize(newWidth: number, newHeight: number): void {
+    // 새로운 캔버스 크기에 맞게 게임 설정 조정
+    this.config.canvasWidth = newWidth;
+    this.config.canvasHeight = newHeight;
+
+    // 플레이어 위치 조정 (하단 중앙 유지)
+    if (this.player) {
+      this.player.position.x = newWidth / 2;
+      this.player.position.y = newHeight - 50;
+    }
+
+    // 별 배경 재생성
+    this.initializeStars();
+
+    // UI 요소들 위치 조정
+    this.adjustUIForScreenSize();
+
+    console.log(`🔄 화면 크기 조정: ${newWidth}x${newHeight}`);
+  }
+
+  private adjustUIForScreenSize(): void {
+    // 모바일 광고 최적화 재적용
+    this.adManager.optimizeAdsForMobile();
+
+    const isMobile = this.config.canvasWidth <= 480;
+
+    // 모바일에서 광고 위치 최적화
+    if (isMobile) {
+      this.adManager.hideBottomBannerAd();
+      this.adManager.showTopBannerAd();
+    } else {
+      this.adManager.showTopBannerAd();
+      this.adManager.showBottomBannerAd();
+    }
+
+    console.log(`📱 광고 레이아웃: ${this.adManager.getCurrentAdLayout()}`);
   }
 }

@@ -21,17 +21,28 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
+
+  // 모바일 터치 최적화
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 // ========================================
 // 메인 그리드 레이아웃
 // ========================================
 
-#main-layout {
-  display: grid;
-  min-height: 100vh;
+#main-layout,
+#main-layout.main-layout-fixed {
+  display: grid !important;
+  min-height: 100vh !important; // 인라인 스타일 강제 오버라이드
+  height: 100vh !important; // 높이도 강제 설정
   grid-template-columns: 180px 1fr 180px;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: minmax(auto, 100px) 1fr minmax(auto, 100px); // 광고 영역 최대 높이 제한
   grid-template-areas:
     'top top top'
     'left center right'
@@ -39,24 +50,65 @@ body {
   gap: 10px;
   padding: 10px;
 
-  // 반응형: 모바일에서는 광고를 상하단만 표시
+  // 중앙 영역이 항상 최대 공간을 차지하도록 보장
+  align-items: center;
+  justify-items: center;
+
+  // 태블릿 (768px ~ 1024px)
   @media (max-width: 1024px) {
+    grid-template-columns: 120px 1fr 120px;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  // 모바일 가로 (481px ~ 767px)
+  @media (max-width: 767px) {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: minmax(auto, 60px) 1fr minmax(auto, 60px); // 모바일 광고 높이 제한 축소 (80px → 60px)
     grid-template-areas:
       'top'
       'center'
       'bottom';
-    gap: 5px;
-    padding: 5px;
+    gap: 3px; // 간격도 축소 (5px → 3px)
+    padding: 3px; // 패딩도 축소 (5px → 3px)
+    min-height: 100vh !important; // 모바일에서도 강제 높이 설정
+    height: 100vh !important;
+
+    // 모바일에서 중앙 정렬 강화
+    align-items: center;
+    justify-items: center;
+  }
+
+  // 모바일 세로 (480px 이하)
+  @media (max-width: 480px) {
+    gap: 2px; // 간격 최소화 (3px → 2px)
+    padding: 2px; // 패딩 최소화 (3px → 2px)
+    min-height: 100vh !important; // 강제 높이 설정
+    min-height: 100dvh !important; // 동적 뷰포트 높이도 강제 설정
+    height: 100vh !important;
+    height: 100dvh !important;
+    grid-template-rows: minmax(auto, 50px) 1fr minmax(auto, 50px); // 더 작은 광고 영역 (70px → 50px)
+
+    // 작은 모바일에서도 중앙 정렬 보장
+    align-items: center;
+    justify-items: center;
   }
 }
 
-// 광고 영역 정의
+// 광고 영역 정의 - 중앙 정렬 보장
 .ad-area {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+
+  // 광고가 숨겨져도 최소 공간 유지 (레이아웃 안정성)
+  min-height: 10px;
+
+  // 광고 표시 시에도 중앙 정렬 유지
+  &:not(:empty) {
+    min-height: auto;
+  }
 }
 
 #top-ad-area {
@@ -66,7 +118,7 @@ body {
 #left-ad-area {
   grid-area: left;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 767px) {
     display: none; // 모바일에서 숨김
   }
 }
@@ -77,12 +129,32 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 600px;
+  width: 100%;
+  height: 100%;
+  position: relative; // 상대 위치 지정
+
+  // 광고 표시 여부와 관계없이 완전 중앙 정렬 보장
+  place-items: center;
+  place-content: center;
+
+  @media (max-width: 767px) {
+    min-height: 500px;
+    // 모바일에서 더 강력한 중앙 정렬
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 400px;
+    justify-content: center !important;
+    align-items: center !important;
+  }
 }
 
 #right-ad-area {
   grid-area: right;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 767px) {
     display: none; // 모바일에서 숨김
   }
 }
@@ -96,28 +168,85 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; // 세로 중앙 정렬 추가
   border: 2px solid $primary-color;
   border-radius: 10px;
   padding: 20px;
   background: rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 20px $primary-color;
+  max-width: 100%;
+  width: fit-content;
+  z-index: 600; // 터치 컨트롤보다 높은 우선순위
+
+  // 광고와 관계없이 항상 중앙에 위치
+  margin: auto; // 자동 마진으로 중앙 정렬
+
+  // 컨테이너가 항상 화면 중앙에 위치하도록 보장
+  transform: translate(0, 0); // 기본 변형값
+
+  @media (max-width: 767px) {
+    padding: 5px; // 패딩 대폭 축소 (10px → 5px)
+    border-radius: 6px;
+    border-width: 1px;
+    width: 100%;
+    max-width: none; // 모바일에서는 최대 너비 제한 제거
+    min-height: unset;
+  }
+
+  @media (max-width: 480px) {
+    padding: 3px; // 패딩 최소화 (5px → 3px)
+    border-radius: 3px;
+    margin: 1px; // 마진도 최소화 (2px → 1px)
+    width: 100%;
+  }
 
   #game-canvas {
     border: 1px solid $primary-color;
     background: #000000; // 순수한 우주 공간 검은색
     box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);
+    max-width: 100%;
+    height: auto;
+    display: block; // 기본 인라인 속성 제거
+
+    @media (max-width: 767px) {
+      // 모바일에서는 동적 크기 계산을 사용하므로 CSS 제한 제거
+      width: 100% !important;
+      height: auto !important;
+      max-width: 95vw;
+      border-width: 1px;
+    }
+
+    @media (max-width: 480px) {
+      max-width: 95vw;
+      border-width: 1px;
+    }
   }
 
   #game-ui {
     display: flex;
     justify-content: space-between;
-    width: 800px;
+    width: 100%;
+    max-width: 800px;
     padding: 10px;
     background: $ui-background;
     border-radius: 5px;
     margin-bottom: 10px;
     font-size: 18px;
     font-weight: bold;
+
+    @media (max-width: 767px) {
+      font-size: 12px; // 폰트 크기 축소 (14px → 12px)
+      padding: 4px; // 패딩 축소 (8px → 4px)
+      flex-wrap: wrap;
+      gap: 3px; // 갭 축소 (5px → 3px)
+      margin-bottom: 5px; // 하단 마진 축소
+    }
+
+    @media (max-width: 480px) {
+      font-size: 10px; // 폰트 크기 더 축소 (12px → 10px)
+      padding: 3px; // 패딩 최소화 (6px → 3px)
+      margin-bottom: 3px; // 하단 마진 최소화
+    }
 
     #score-display,
     #lives-display {
@@ -441,10 +570,65 @@ body {
 
 .hidden {
   display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+
+  // 광고 영역이 숨겨질 때 부모 영역도 최소화
+  &.ad-container {
+    min-height: 0 !important;
+  }
+}
+
+// 상단 레벨업 알림 (게임 플레이 방해 최소화)
+#level-notification {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  background: linear-gradient(45deg, $primary-color, $secondary-color);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 2px 10px rgba(0, 255, 255, 0.4);
+  animation: levelNotificationSlide 3s ease-in-out forwards;
+
+  #level-notification-text {
+    margin: 0;
+    font-size: inherit;
+  }
+}
+
+@keyframes levelNotificationSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  85% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
 }
 
 // 반응형 디자인
-// 게임 메시지 (레벨업 등)
+// 게임 메시지 (보스 등장 등 중요한 메시지용)
 #game-message {
   position: fixed;
   top: 50%;
@@ -521,6 +705,14 @@ body {
     }
   }
 
+  // 상단 레벨업 알림 모바일 최적화
+  #level-notification {
+    top: 5px;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 15px;
+  }
+
   #game-message,
   #boss-intro {
     padding: 20px 30px;
@@ -551,12 +743,41 @@ body {
   border-radius: 5px;
   border: 1px solid $primary-color;
 
+  // 광고 표시/숨김 시 부드러운 전환 효과
+  transition: all 0.3s ease-in-out;
+
+  // 광고가 표시될 때 중앙 정렬 보장
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 767px) {
+    max-width: 100%;
+    margin: 5px auto;
+    padding: 8px;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 5px;
+    margin: 3px auto;
+  }
+
   // 개발용 더미 광고 스타일
   .adsbygoogle {
     background: rgba(0, 255, 0, 0.1);
     border: 1px dashed $primary-color;
     position: relative;
     min-height: 90px;
+
+    @media (max-width: 767px) {
+      min-height: 70px;
+    }
+
+    @media (max-width: 480px) {
+      min-height: 60px;
+    }
 
     &::after {
       content: '📺 광고 영역 (개발용)';
@@ -567,6 +788,10 @@ body {
       color: $primary-color;
       font-size: 14px;
       pointer-events: none;
+
+      @media (max-width: 480px) {
+        font-size: 12px;
+      }
     }
   }
 }
@@ -612,6 +837,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  // 인터스티셜 광고 완전 비활성화
+  &#interstitial-ad {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 
   .ad-overlay-content {
     background: $ui-background;
@@ -678,6 +911,175 @@ body {
       &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+      }
+    }
+  }
+
+  // ========================================
+  // 모바일 터치 컨트롤 UI
+  // ========================================
+
+  .mobile-controls {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 500; // 게임 UI보다 낮은 우선순위로 변경
+    display: none;
+
+    @media (max-width: 767px) {
+      display: block;
+    }
+
+    &.active {
+      // 전체 영역은 pointer-events none 유지, 개별 컨트롤만 활성화
+      pointer-events: none;
+    }
+
+    // 컨트롤 영역
+    .control-area {
+      position: absolute;
+      pointer-events: auto;
+    }
+
+    .control-left {
+      bottom: 20px;
+      left: 20px;
+    }
+
+    .control-right {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    // 가상 조이스틱
+    .joystick-container {
+      text-align: center;
+    }
+
+    .joystick {
+      width: 100px;
+      height: 100px;
+      border: 3px solid $primary-color;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.7);
+      position: relative;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+      margin-bottom: 5px;
+    }
+
+    .joystick-knob {
+      width: 40px;
+      height: 40px;
+      background: $primary-color;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .joystick-label {
+      color: $primary-color;
+      font-size: 12px;
+      font-weight: bold;
+      text-shadow: 0 0 5px $primary-color;
+    }
+
+    // 액션 버튼들
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: flex-end;
+    }
+
+    .action-btn {
+      width: 80px;
+      height: 80px;
+      border: 2px solid $primary-color;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.8);
+      color: $primary-color;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+
+      &:active,
+      &.active {
+        transform: scale(0.95);
+        background: rgba(0, 255, 0, 0.2);
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+      }
+
+      .btn-icon {
+        font-size: 24px;
+        margin-bottom: 2px;
+      }
+
+      .btn-label {
+        font-size: 10px;
+        font-weight: bold;
+        text-shadow: 0 0 3px $primary-color;
+      }
+    }
+
+    .shoot-btn {
+      &:active,
+      &.active {
+        background: rgba(255, 100, 0, 0.3);
+        border-color: #ff6400;
+        box-shadow: 0 0 20px rgba(255, 100, 0, 0.6);
+      }
+    }
+
+    // 하단 컨트롤
+    .bottom-controls {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+    }
+
+    // 상단 레벨업 알림 작은 모바일 최적화
+    #level-notification {
+      top: 3px;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 12px;
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      border: 2px solid $primary-color;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.7);
+      color: $primary-color;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+
+      &:active {
+        transform: scale(0.9);
+        background: rgba(0, 255, 0, 0.2);
+      }
+
+      .btn-icon {
+        font-size: 18px;
       }
     }
   }

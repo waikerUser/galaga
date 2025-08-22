@@ -2,7 +2,10 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover"
+    />
     <title>Gallag Shooting Game.</title>
 
     <!-- Google AdSense Script -->
@@ -50,6 +53,11 @@
       <!-- 게임 중앙 영역 -->
       <div id="game-center-area">
         <div id="game-container">
+          <!-- 상단 레벨업 알림 -->
+          <div id="level-notification" class="hidden">
+            <div id="level-notification-text">레벨 업!</div>
+          </div>
+
           <div id="game-ui">
             <div id="score-display">점수: <span id="score">0</span></div>
             <div id="stage-display">스테이지: <span id="stage">1</span></div>
@@ -165,8 +173,12 @@
         </div>
       </div>
 
-      <!-- 인터스티셜 광고 (게임 오버 후) -->
-      <div id="interstitial-ad" class="ad-overlay hidden">
+      <!-- 인터스티셜 광고 (비활성화됨 - 사용자 요청으로 제거) -->
+      <div
+        id="interstitial-ad"
+        class="ad-overlay hidden"
+        style="display: none !important"
+      >
         <div class="ad-overlay-content">
           <h3>잠깐! 광고를 시청해주세요</h3>
           <div class="ad-unit">
@@ -222,5 +234,42 @@
       </div>
     </div>
     <!-- main-layout 닫기 -->
+
+    <!-- 모바일 터치 컨트롤 UI -->
+    <div id="mobile-controls" class="mobile-controls hidden">
+      <!-- 이동 컨트롤 (좌측) -->
+      <div class="control-area control-left">
+        <div class="joystick-container">
+          <div id="joystick" class="joystick">
+            <div class="joystick-knob"></div>
+          </div>
+          <div class="joystick-label">이동</div>
+        </div>
+      </div>
+
+      <!-- 액션 버튼 (우측) -->
+      <div class="control-area control-right">
+        <div class="action-buttons">
+          <button id="shoot-btn" class="action-btn shoot-btn" data-key="space">
+            <span class="btn-icon">🚀</span>
+            <span class="btn-label">발사</span>
+          </button>
+          <button id="pause-btn" class="action-btn pause-btn" data-key="escape">
+            <span class="btn-icon">⏸️</span>
+            <span class="btn-label">일시정지</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 하단 버튼들 -->
+      <div class="bottom-controls">
+        <button id="fullscreen-btn" class="control-btn">
+          <span class="btn-icon">⛶</span>
+        </button>
+        <button id="vibration-btn" class="control-btn">
+          <span class="btn-icon">📳</span>
+        </button>
+      </div>
+    </div>
   </body>
 </html>
