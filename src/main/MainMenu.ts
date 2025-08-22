@@ -57,21 +57,83 @@ export class MainMenu {
   public render(): void {
     console.log('🎮 메인 메뉴 렌더링');
 
-    // 메인 컨테이너 생성
+    // 메인 컨테이너를 광고가 포함된 그리드 레이아웃으로 생성
     this.container.innerHTML = `
-      <div id="main-menu" class="main-menu">
-        <header class="arcade-header">
-          <h1 class="arcade-title">🕹️ MINI ARCADE</h1>
-          <p class="arcade-subtitle">클래식 게임을 즐겨보세요!</p>
-        </header>
-        
-        <div class="games-grid" id="games-grid">
-          ${this.renderGameCards()}
+      <!-- 메인 메뉴 전체 레이아웃 (광고 포함) -->
+      <div id="main-menu-layout" class="main-menu-layout">
+        <!-- 상단 광고 영역 -->
+        <div id="main-top-ad-area" class="main-ad-area">
+          <div id="main-top-banner-ad" class="main-ad-container hidden">
+            <ins
+              class="adsbygoogle"
+              style="display: block"
+              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+              data-ad-slot="1234567890"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+          </div>
         </div>
-        
-        <footer class="arcade-footer">
-          <p>&copy; 2024 Mini Arcade - Built with ❤️</p>
-        </footer>
+
+        <!-- 좌측 광고 영역 -->
+        <div id="main-left-ad-area" class="main-ad-area">
+          <div id="main-sidebar-ad-left" class="main-ad-container main-sidebar-ad hidden">
+            <ins
+              class="adsbygoogle main-sidebar-ad-unit"
+              style="display: block"
+              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+              data-ad-slot="0987654321"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+          </div>
+        </div>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <div id="main-content-area" class="main-content-area">
+          <div id="main-menu" class="main-menu">
+            <header class="arcade-header">
+              <h1 class="arcade-title">🕹️ MINI ARCADE</h1>
+              <p class="arcade-subtitle">클래식 게임을 즐겨보세요!</p>
+            </header>
+            
+            <div class="games-grid" id="games-grid">
+              ${this.renderGameCards()}
+            </div>
+            
+            <footer class="arcade-footer">
+              <p>&copy; 2024 Mini Arcade - Built with ❤️</p>
+            </footer>
+          </div>
+        </div>
+
+        <!-- 우측 광고 영역 -->
+        <div id="main-right-ad-area" class="main-ad-area">
+          <div id="main-sidebar-ad-right" class="main-ad-container main-sidebar-ad hidden">
+            <ins
+              class="adsbygoogle main-sidebar-ad-unit"
+              style="display: block"
+              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+              data-ad-slot="1357924680"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+          </div>
+        </div>
+
+        <!-- 하단 광고 영역 -->
+        <div id="main-bottom-ad-area" class="main-ad-area">
+          <div id="main-bottom-banner-ad" class="main-ad-container hidden">
+            <ins
+              class="adsbygoogle"
+              style="display: block"
+              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+              data-ad-slot="2468013579"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+          </div>
+        </div>
       </div>
     `;
 
@@ -147,13 +209,94 @@ export class MainMenu {
     // 동적 스타일 추가
     const styleSheet = document.createElement('style');
     styleSheet.textContent = `
-      .main-menu {
-        min-height: 100vh;
+      /* 메인 메뉴 광고 포함 레이아웃 */
+      .main-menu-layout {
+        display: grid !important;
+        min-height: 100vh !important;
+        height: 100vh !important;
+        grid-template-columns: 180px 1fr 180px;
+        grid-template-rows: minmax(auto, 100px) 1fr minmax(auto, 100px);
+        grid-template-areas:
+          'main-top main-top main-top'
+          'main-left main-center main-right'
+          'main-bottom main-bottom main-bottom';
+        gap: 10px;
+        padding: 10px;
         background: 
           radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
           radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
           radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
           linear-gradient(135deg, #0f0f23 0%, #1a1a2e 40%, #16213e 100%);
+        align-items: center;
+        justify-items: center;
+      }
+
+      /* 광고 영역 정의 */
+      .main-ad-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+
+      #main-top-ad-area { grid-area: main-top; }
+      #main-left-ad-area { grid-area: main-left; }
+      #main-content-area { grid-area: main-center; }
+      #main-right-ad-area { grid-area: main-right; }
+      #main-bottom-ad-area { grid-area: main-bottom; }
+
+      /* 광고 컨테이너 */
+      .main-ad-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .main-ad-container:not(.hidden) {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* 사이드바 광고 전용 스타일 */
+      .main-sidebar-ad {
+        min-height: 250px;
+        max-height: 600px;
+      }
+
+      .main-sidebar-ad-unit {
+        width: 100%;
+        height: 100%;
+        min-height: 250px;
+      }
+
+      /* 숨겨진 광고 (더미 표시) */
+      .main-ad-container.hidden::before {
+        content: '📺 광고 영역';
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 14px;
+        font-family: 'Orbitron', monospace;
+      }
+
+      /* 메인 콘텐츠 영역 */
+      .main-content-area {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+      }
+
+      .main-menu {
+        width: 100%;
+        max-width: 1000px;
         padding: 20px;
         font-family: 'Orbitron', 'Arial', monospace;
         position: relative;
@@ -400,6 +543,24 @@ export class MainMenu {
 
       /* 모바일 최적화 */
       @media (max-width: 768px) {
+        /* 메인 레이아웃 모바일 조정 */
+        .main-menu-layout {
+          grid-template-columns: 1fr;
+          grid-template-rows: minmax(auto, 80px) 1fr minmax(auto, 80px);
+          grid-template-areas:
+            'main-top'
+            'main-center'
+            'main-bottom';
+          gap: 5px;
+          padding: 5px;
+        }
+
+        /* 사이드바 광고 숨김 */
+        #main-left-ad-area,
+        #main-right-ad-area {
+          display: none;
+        }
+
         .main-menu {
           padding: 15px;
         }
@@ -451,6 +612,13 @@ export class MainMenu {
       }
 
       @media (max-width: 480px) {
+        /* 초소형 모바일 레이아웃 */
+        .main-menu-layout {
+          grid-template-rows: minmax(auto, 60px) 1fr minmax(auto, 60px);
+          gap: 3px;
+          padding: 3px;
+        }
+
         .arcade-title {
           font-size: 2rem;
         }
