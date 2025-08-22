@@ -4,272 +4,232 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=cover"
     />
-    <title>Gallag Shooting Game.</title>
+    <title>🕹️ Mini Arcade - 클래식 게임 컬렉션</title>
 
-    <!-- Google AdSense Script -->
-    <!-- 실제 운영 시 ca-pub-XXXXXXXXXXXXXXXXX를 본인의 AdSense Publisher ID로 교체하세요 -->
+    <!-- SEO 메타 태그 -->
+    <meta
+      name="description"
+      content="클래식 아케이드 게임들을 브라우저에서 즐겨보세요! 갤러그, 테트리스, 스네이크 등 다양한 미니게임을 제공합니다."
+    />
+    <meta
+      name="keywords"
+      content="아케이드게임, 미니게임, 갤러그, 테트리스, 스네이크, 온라인게임"
+    />
+
+    <!-- Google AdSense Script (추후 활성화) -->
+    <!-- 
     <script
       async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3704514086413798"
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX"
       crossorigin="anonymous"
     ></script>
+    -->
 
-    <!-- AdSense 자동 광고는 개별 광고 단위와 충돌하므로 제거 -->
+    <!-- 폰트 로드 (선택사항) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- 파비콘 (선택사항) -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGRSURBVFhH7ZY9SwNBEIafgIWNYGGxjYWNhYWNhY2FjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2N"
+    />
   </head>
+
   <body>
-    <!-- 전체 레이아웃 컨테이너 -->
-    <div id="main-layout">
-      <!-- 상단 광고 영역 -->
-      <div id="top-ad-area" class="ad-area">
-        <div id="top-banner-ad" class="ad-container hidden">
-          <ins
-            class="adsbygoogle"
-            style="display: block"
-            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-            data-ad-slot="1234567890"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-          <!-- 동적 로딩을 위해 스크립트 제거 -->
-        </div>
-      </div>
-
-      <!-- 좌측 광고 영역 -->
-      <div id="left-ad-area" class="ad-area">
-        <div id="sidebar-ad-left" class="sidebar-ad hidden">
-          <ins
-            class="adsbygoogle"
-            style="display: block; width: 160px; height: 600px"
-            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-            data-ad-slot="0987654321"
-            data-ad-format="rectangle"
-          ></ins>
-          <!-- 동적 로딩을 위해 스크립트 제거 -->
-        </div>
-      </div>
-
-      <!-- 게임 중앙 영역 -->
-      <div id="game-center-area">
-        <div id="game-container">
-          <!-- 상단 레벨업 알림 -->
-          <div id="level-notification" class="hidden">
-            <div id="level-notification-text">레벨 업!</div>
-          </div>
-
-          <div id="game-ui">
-            <div id="score-display">점수: <span id="score">0</span></div>
-            <div id="stage-display">스테이지: <span id="stage">1</span></div>
-            <div id="lives-display">생명: <span id="lives">3</span></div>
-            <div id="powerup-info">
-              <div id="missile-level">
-                🚀 미사일: <span id="missile-count">1</span>발
-                <span id="missile-tier">T1</span>
-              </div>
-              <div id="items-collected">
-                📦 수집: <span id="items-count">0</span>개
-              </div>
-            </div>
-            <div id="performance-info">
-              <div id="bullet-pool">
-                ⚡ 풀: <span id="pool-active">0</span>/<span id="pool-total"
-                  >150</span
-                >
-              </div>
-            </div>
-            <div id="player-status">
-              <div id="power-up-status" class="hidden">
-                ⚡ POWER UP! <span id="power-up-time">10</span>초
-              </div>
-              <div id="shield-status" class="hidden">
-                🛡️ SHIELD <span id="shield-hits">3</span>회
-              </div>
-            </div>
-          </div>
-          <div id="boss-ui" class="hidden">
-            <div id="boss-warning">⚠️ 보스 출현! ⚠️</div>
-            <div id="boss-health-container">
-              <div id="boss-health-label">보스 체력</div>
-              <div id="boss-health-bar">
-                <div id="boss-health-fill"></div>
-              </div>
-            </div>
-          </div>
-          <canvas id="game-canvas" width="800" height="600"></canvas>
-          <div id="game-over" class="hidden">
-            <h2>게임 오버!</h2>
-            <p>최종 점수: <span id="final-score">0</span></p>
-            <button id="restart-btn">다시 시작</button>
-          </div>
-          <div id="start-screen">
-            <h1>Gallag Shooting Game</h1>
-            <p>방향키로 이동하고 스페이스바로 발사하세요!</p>
-            <button id="start-btn">게임 시작</button>
-          </div>
-          <div id="difficulty-screen" class="hidden">
-            <h2>난이도 선택</h2>
-            <div class="difficulty-buttons">
-              <button id="easy-btn" class="difficulty-btn">
-                <span class="diff-name">쉬움</span>
-                <span class="diff-desc"
-                  >적이 느리고 아이템이 많이 나옵니다</span
-                >
-              </button>
-              <button id="normal-btn" class="difficulty-btn">
-                <span class="diff-name">보통</span>
-                <span class="diff-desc">균형잡힌 게임 플레이</span>
-              </button>
-              <button id="hard-btn" class="difficulty-btn">
-                <span class="diff-name">어려움</span>
-                <span class="diff-desc">빠른 적과 높은 점수 배율</span>
-              </button>
-            </div>
-            <button id="back-btn">뒤로</button>
-          </div>
-
-          <!-- 레벨업 및 게임 메시지 -->
-          <div id="game-message" class="hidden">
-            <div id="message-text">LEVEL UP!</div>
-            <div id="message-subtext">레벨 2 시작</div>
-          </div>
-
-          <!-- 보스 등장 연출 -->
-          <div id="boss-intro" class="hidden">
-            <div id="boss-intro-text">WARNING!</div>
-            <div id="boss-intro-subtext">보스가 등장합니다!</div>
-          </div>
-        </div>
-        <!-- game-container 닫기 -->
-      </div>
-      <!-- game-center-area 닫기 -->
-
-      <!-- 우측 광고 영역 -->
-      <div id="right-ad-area" class="ad-area">
-        <div id="sidebar-ad-right" class="sidebar-ad hidden">
-          <ins
-            class="adsbygoogle"
-            style="display: block; width: 160px; height: 600px"
-            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-            data-ad-slot="1122334455"
-            data-ad-format="rectangle"
-          ></ins>
-          <!-- 동적 로딩을 위해 스크립트 제거 -->
-        </div>
-      </div>
-
-      <!-- 하단 광고 영역 -->
-      <div id="bottom-ad-area" class="ad-area">
-        <div id="bottom-banner-ad" class="ad-container hidden">
-          <ins
-            class="adsbygoogle"
-            style="display: block"
-            data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-            data-ad-slot="2233445566"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-          <!-- 동적 로딩을 위해 스크립트 제거 -->
-        </div>
-      </div>
-
-      <!-- 인터스티셜 광고 (비활성화됨 - 사용자 요청으로 제거) -->
-      <div
-        id="interstitial-ad"
-        class="ad-overlay hidden"
-        style="display: none !important"
-      >
-        <div class="ad-overlay-content">
-          <h3>잠깐! 광고를 시청해주세요</h3>
-          <div class="ad-unit">
-            <ins
-              class="adsbygoogle"
-              style="display: block; width: 320px; height: 480px"
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-              data-ad-slot="9988776655"
-              data-ad-format="auto"
-            ></ins>
-            <!-- 동적 로딩을 위해 스크립트 제거 -->
-          </div>
-          <button id="close-ad" class="close-ad-btn">광고 닫기 (5초)</button>
-        </div>
-      </div>
-
-      <!-- 보상형 광고 오버레이 -->
-      <div id="reward-ad-overlay" class="ad-overlay hidden">
-        <div class="ad-overlay-content">
-          <h3>🎁 보상을 받으시겠습니까?</h3>
-          <p>광고를 시청하고 특별한 보상을 받아보세요!</p>
-          <div class="reward-options">
-            <div class="reward-option" data-reward="powerup">
-              <span class="reward-icon">⚡</span>
-              <span class="reward-text">Power Up</span>
-            </div>
-            <div class="reward-option" data-reward="life">
-              <span class="reward-icon">❤️</span>
-              <span class="reward-text">생명 +1</span>
-            </div>
-            <div class="reward-option" data-reward="shield">
-              <span class="reward-icon">🛡️</span>
-              <span class="reward-text">Shield</span>
-            </div>
-          </div>
-          <div class="reward-ad-unit">
-            <ins
-              class="adsbygoogle"
-              style="display: block; width: 300px; height: 250px"
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-              data-ad-slot="5566778899"
-              data-ad-format="rectangle"
-            ></ins>
-            <!-- 동적 로딩을 위해 스크립트 제거 -->
-          </div>
-          <div class="reward-buttons">
-            <button id="watch-reward-ad" class="reward-btn">
-              광고 시청하기
-            </button>
-            <button id="skip-reward-ad" class="skip-btn">건너뛰기</button>
-          </div>
+    <!-- 메인 게임 컨테이너 -->
+    <div id="game-container" class="game-container">
+      <!-- 동적으로 라우팅에 따라 내용이 변경됩니다 -->
+      <div class="loading">
+        <div class="loading-content">
+          <h2>🕹️ Mini Arcade</h2>
+          <p>로딩 중...</p>
+          <div class="loading-spinner"></div>
         </div>
       </div>
     </div>
-    <!-- main-layout 닫기 -->
 
-    <!-- 모바일 터치 컨트롤 UI -->
-    <div id="mobile-controls" class="mobile-controls hidden">
-      <!-- 이동 컨트롤 (좌측) -->
-      <div class="control-area control-left">
-        <div class="joystick-container">
-          <div id="joystick" class="joystick">
-            <div class="joystick-knob"></div>
-          </div>
-          <div class="joystick-label">이동</div>
-        </div>
-      </div>
+    <!-- 기본 로딩 스타일 -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-      <!-- 액션 버튼 (우측) -->
-      <div class="control-area control-right">
-        <div class="action-buttons">
-          <button id="shoot-btn" class="action-btn shoot-btn" data-key="space">
-            <span class="btn-icon">🚀</span>
-            <span class="btn-label">발사</span>
-          </button>
-          <button id="pause-btn" class="action-btn pause-btn" data-key="escape">
-            <span class="btn-icon">⏸️</span>
-            <span class="btn-label">일시정지</span>
-          </button>
-        </div>
-      </div>
+      body,
+      html {
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        overflow: hidden;
+        background: #000;
+      }
 
-      <!-- 하단 버튼들 -->
-      <div class="bottom-controls">
-        <button id="fullscreen-btn" class="control-btn">
-          <span class="btn-icon">⛶</span>
-        </button>
-        <button id="vibration-btn" class="control-btn">
-          <span class="btn-icon">📳</span>
-        </button>
-      </div>
-    </div>
+      .game-container {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .loading-content {
+        text-align: center;
+      }
+
+      .loading-content h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .loading-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-left: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* 게임 활성화 시 스타일 */
+      body.game-active {
+        overflow: auto;
+      }
+
+      body.main-menu-active {
+        overflow: auto;
+      }
+
+      /* 반응형 디자인 */
+      @media (max-width: 768px) {
+        .loading-content h2 {
+          font-size: 2rem;
+        }
+
+        .loading-content p {
+          font-size: 1rem;
+        }
+      }
+
+      /* 게임별 추가 스타일 클래스들 */
+      .game-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+      }
+
+      .back-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+      }
+
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+      }
+
+      .galaga-game-container {
+        margin-top: 60px; /* 게임 헤더 높이만큼 여백 */
+      }
+
+      /* Coming Soon 페이지 스타일 */
+      .coming-soon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+      }
+
+      .coming-soon-content {
+        text-align: center;
+        padding: 40px;
+      }
+
+      .coming-soon-content h2 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .coming-soon-content p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      /* 에러 화면 스타일 */
+      .error-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        color: white;
+      }
+
+      .error-content {
+        text-align: center;
+        padding: 40px;
+      }
+
+      .error-content h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .error-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+    </style>
   </body>
 </html>

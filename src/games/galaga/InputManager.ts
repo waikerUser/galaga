@@ -1,4 +1,4 @@
-import { KeyState } from '../types';
+import { KeyState } from '../../shared/types';
 
 export class InputManager {
   private keyState: KeyState;
@@ -113,8 +113,9 @@ export class InputManager {
     console.log('🎮 전체 화면 터치 컨트롤 설정 시작');
 
     // DOM 요소들 찾기
-    this.touchControls.gameContainer =
-      document.getElementById('game-container');
+    this.touchControls.gameContainer = document.getElementById(
+      'galaga-game-container'
+    );
     this.touchControls.pauseBtn = document.getElementById('pause-btn');
     this.touchControls.mobileControls =
       document.getElementById('mobile-controls');

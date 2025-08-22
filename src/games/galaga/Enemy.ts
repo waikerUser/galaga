@@ -1,5 +1,5 @@
 import { BaseGameObject } from './BaseGameObject';
-import { Position, Size, EnemyType, PowerUpType, Difficulty } from '../types';
+import { Position, Size, EnemyType, PowerUpType, Difficulty } from '../../shared/types';
 
 export class Enemy extends BaseGameObject {
   private enemyType: EnemyType;

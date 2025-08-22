@@ -1,4 +1,4 @@
-import { GameObject, Position, Size, Velocity, Rectangle } from '../types';
+import { GameObject, Position, Size, Velocity, Rectangle } from '../../shared/types';
 
 export abstract class BaseGameObject implements GameObject {
   public position: Position;

@@ -1,5 +1,5 @@
 import { BaseGameObject } from './BaseGameObject';
-import { Position, Size, BulletType } from '../types';
+import { Position, Size, BulletType } from '../../shared/types';
 
 export class Bullet extends BaseGameObject {
   private bulletType: BulletType;

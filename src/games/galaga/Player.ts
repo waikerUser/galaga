@@ -5,7 +5,7 @@ import {
   KeyState,
   PlayerPowerUps,
   PowerUpType,
-} from '../types';
+} from '../../shared/types';
 
 export class Player extends BaseGameObject {
   private speed: number;

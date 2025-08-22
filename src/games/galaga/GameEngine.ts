@@ -6,7 +6,7 @@ import {
   Difficulty,
   DifficultyConfig,
   PowerUpType,
-} from '../types';
+} from '../../shared/types';
 import { Player } from './Player';
 import { Enemy } from './Enemy';
 import { Bullet } from './Bullet';

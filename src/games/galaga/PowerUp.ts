@@ -1,5 +1,5 @@
 import { BaseGameObject } from './BaseGameObject';
-import { Position, Size, PowerUpType } from '../types';
+import { Position, Size, PowerUpType } from '../../shared/types';
 
 export class PowerUp extends BaseGameObject {
   private powerUpType: PowerUpType;

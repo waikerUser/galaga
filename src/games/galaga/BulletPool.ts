@@ -1,5 +1,5 @@
 import { Bullet } from './Bullet';
-import { Position, BulletType } from '../types';
+import { Position, BulletType } from '../../shared/types';
 
 export class BulletPool {
   private pool: Bullet[] = [];

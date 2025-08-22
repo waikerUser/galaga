@@ -225,6 +225,7 @@ body {
   #game-ui {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     max-width: 800px;
     padding: 10px;
@@ -234,6 +235,50 @@ body {
     font-size: 18px;
     font-weight: bold;
 
+    .ui-left,
+    .ui-center,
+    .ui-right {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .ui-center {
+      text-align: center;
+    }
+
+    .stat-item {
+      color: $primary-color;
+      text-shadow: 0 0 5px $primary-color;
+    }
+  }
+
+  // 디버그 정보 스타일
+  .debug-info {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #888;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: monospace;
+    z-index: 1000;
+
+    .debug-item {
+      margin-bottom: 2px;
+    }
+
+    @media (max-width: 767px) {
+      font-size: 10px;
+      padding: 3px 6px;
+      top: 5px;
+      right: 5px;
+    }
+  }
+
+  #game-ui {
     @media (max-width: 767px) {
       font-size: 12px; // 폰트 크기 축소 (14px → 12px)
       padding: 4px; // 패딩 축소 (8px → 4px)
