@@ -91,29 +91,30 @@ class GallagGame {
       const availableHeight = this.calculateAvailableHeight();
       const availableWidth = viewportWidth;
 
-      // 화면 너비의 98% 사용 (여백 최소화)
+      // 모바일에서는 화면을 최대한 활용 (높이 우선)
       canvasWidth = Math.floor(availableWidth * 0.98);
 
-      // 사용 가능한 높이를 최대한 활용 (UI 공간 최소화)
-      const maxHeightFromWidth = canvasWidth / aspectRatio;
-      const maxHeightFromScreen = availableHeight * 0.99; // UI 공간 1%만 확보 - 더 공격적으로
+      // 사용 가능한 높이를 거의 100% 활용
+      canvasHeight = Math.floor(availableHeight * 0.98); // 98% 사용으로 더 공격적
 
-      // 높이를 우선하여 화면을 꽉 채움
-      canvasHeight = Math.floor(maxHeightFromScreen);
+      // 모바일에서는 더 자유로운 비율 허용 (세로로 더 길게)
+      const maxAllowedHeight = canvasWidth * 2.0; // 1:2 비율까지 허용 (세로로 훨씬 더 길게)
+      const minAllowedHeight = canvasWidth * 0.8; // 최소 높이도 설정
 
-      // 높이에 맞춰 너비를 역계산하여 비율 유지 (필요한 경우)
-      const idealWidthFromHeight = canvasHeight * aspectRatio;
-      if (idealWidthFromHeight > canvasWidth) {
-        // 너비가 부족하면 높이를 조정
-        canvasHeight = Math.floor(canvasWidth / aspectRatio);
-      }
-
-      // 비율 제한을 더 관대하게 설정 (높이 우선)
-      const maxAllowedHeight = canvasWidth * 1.5; // 2:3 비율까지 허용 (세로로 더 길게)
+      // 높이 제한 적용 (하지만 더 관대하게)
       if (canvasHeight > maxAllowedHeight) {
         canvasHeight = Math.floor(maxAllowedHeight);
-        canvasWidth = Math.floor(canvasHeight * aspectRatio);
+      } else if (canvasHeight < minAllowedHeight) {
+        canvasHeight = Math.floor(minAllowedHeight);
       }
+
+      // 너비도 높이에 맞춰 재조정 (비율을 완전히 무시하지 않되, 유연하게)
+      const idealWidthFromHeight = canvasHeight * aspectRatio;
+      if (idealWidthFromHeight <= availableWidth * 0.98) {
+        // 이상적인 너비가 사용 가능 너비 내에 있으면 조정
+        canvasWidth = Math.floor(idealWidthFromHeight);
+      }
+      // 그렇지 않으면 현재 너비 유지 (화면을 꽉 채우는 것을 우선시)
 
       console.log(
         `📱 모바일 캔버스: ${canvasWidth}x${canvasHeight} (사용가능: ${availableWidth}x${availableHeight})`
@@ -161,17 +162,25 @@ class GallagGame {
       reservedHeight += actualHeight > 0 ? Math.min(actualHeight, 60) : 40; // 최대 60px로 제한
     }
 
+    // 모바일 터치 컨트롤 영역 고려 (전체 화면 터치 모드에서는 UI 없음)
+    const isMobile = window.innerWidth <= 767;
+    const touchControlsHeight = 0; // 전체 화면 터치 모드로 터치 컨트롤 UI 제거
+
     // 게임 UI와 컨테이너 영역 대폭 최소화
-    const gameUIHeight = 50; // 게임 UI 높이 대폭 축소 (80px → 50px)
-    const containerPadding = 6; // 컨테이너 패딩 최소화 (10px → 6px)
-    const safeMargin = 4; // 안전 여백 최소화 (10px → 4px)
+    const gameUIHeight = 40; // 게임 UI 높이 추가 축소 (50px → 40px)
+    const containerPadding = 4; // 컨테이너 패딩 최소화 (6px → 4px)
+    const safeMargin = 2; // 안전 여백 최소화 (4px → 2px)
 
     const totalReservedHeight =
-      reservedHeight + gameUIHeight + containerPadding + safeMargin;
-    const availableHeight = Math.max(280, viewportHeight - totalReservedHeight);
+      reservedHeight +
+      gameUIHeight +
+      containerPadding +
+      safeMargin +
+      touchControlsHeight;
+    const availableHeight = Math.max(300, viewportHeight - totalReservedHeight);
 
     console.log(
-      `📏 모바일 최적화된 사용가능 높이: ${availableHeight}px (전체: ${viewportHeight}px, 예약: ${totalReservedHeight}px, 광고실제: ${reservedHeight}px)`
+      `📏 모바일 최적화된 사용가능 높이: ${availableHeight}px (전체: ${viewportHeight}px, 예약: ${totalReservedHeight}px, 광고: ${reservedHeight}px, 전체화면터치모드: ${touchControlsHeight}px)`
     );
 
     return availableHeight;

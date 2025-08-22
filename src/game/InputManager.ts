@@ -6,18 +6,17 @@ export class InputManager {
 
   // 터치 컨트롤 관련 속성
   private touchControls: {
-    joystick: HTMLElement | null;
-    joystickKnob: HTMLElement | null;
-    shootBtn: HTMLElement | null;
+    gameContainer: HTMLElement | null;
     pauseBtn: HTMLElement | null;
     mobileControls: HTMLElement | null;
   };
 
   private touchState: {
-    joystickActive: boolean;
-    joystickCenter: { x: number; y: number };
-    joystickRadius: number;
+    isActive: boolean;
     currentTouch: { x: number; y: number } | null;
+    gameAreaBounds: DOMRect | null;
+    playerPosition: { x: number; y: number };
+    autoShoot: boolean;
   };
 
   constructor() {
@@ -46,18 +45,17 @@ export class InputManager {
     };
 
     this.touchControls = {
-      joystick: null,
-      joystickKnob: null,
-      shootBtn: null,
+      gameContainer: null,
       pauseBtn: null,
       mobileControls: null,
     };
 
     this.touchState = {
-      joystickActive: false,
-      joystickCenter: { x: 0, y: 0 },
-      joystickRadius: 50,
+      isActive: false,
       currentTouch: null,
+      gameAreaBounds: null,
+      playerPosition: { x: 400, y: 500 }, // 기본 플레이어 위치
+      autoShoot: false,
     };
 
     this.setupEventListeners();
@@ -112,23 +110,32 @@ export class InputManager {
 
   // 터치 컨트롤 설정
   private setupTouchControls(): void {
+    console.log('🎮 전체 화면 터치 컨트롤 설정 시작');
+
     // DOM 요소들 찾기
+    this.touchControls.gameContainer =
+      document.getElementById('game-container');
+    this.touchControls.pauseBtn = document.getElementById('pause-btn');
     this.touchControls.mobileControls =
       document.getElementById('mobile-controls');
-    this.touchControls.joystick = document.getElementById('joystick');
-    this.touchControls.joystickKnob =
-      this.touchControls.joystick?.querySelector(
-        '.joystick-knob'
-      ) as HTMLElement;
-    this.touchControls.shootBtn = document.getElementById('shoot-btn');
-    this.touchControls.pauseBtn = document.getElementById('pause-btn');
+
+    // DOM 요소 확인 로그
+    console.log('🎮 터치 컨트롤 DOM 요소 확인:', {
+      gameContainer: !!this.touchControls.gameContainer,
+      pauseBtn: !!this.touchControls.pauseBtn,
+      mobileControls: !!this.touchControls.mobileControls,
+    });
+
+    // 모바일 환경 체크
+    const isMobileDevice = this.isMobile();
+    console.log('🎮 모바일 디바이스 체크:', isMobileDevice);
 
     // 모바일 환경에서만 터치 컨트롤 활성화
-    if (this.isMobile()) {
+    if (isMobileDevice) {
       this.enableMobileControls();
+      this.setupFullScreenTouchEvents();
     }
 
-    this.setupJoystickEvents();
     this.setupButtonEvents();
   }
 
@@ -142,116 +149,166 @@ export class InputManager {
   }
 
   private enableMobileControls(): void {
+    // 전체 화면 터치 방식에서는 기존 조이스틱 UI를 숨김
     if (this.touchControls.mobileControls) {
-      this.touchControls.mobileControls.classList.remove('hidden');
-      this.touchControls.mobileControls.classList.add('active');
+      this.touchControls.mobileControls.classList.add('hidden');
+      console.log('🎮 조이스틱 UI 숨김 - 전체 화면 터치 모드');
     }
   }
 
-  private setupJoystickEvents(): void {
-    if (!this.touchControls.joystick || !this.touchControls.joystickKnob)
-      return;
+  private setupFullScreenTouchEvents(): void {
+    console.log('🎮 전체 화면 터치 이벤트 설정');
 
-    const joystick = this.touchControls.joystick;
-    const knob = this.touchControls.joystickKnob;
-
-    // 조이스틱 중심점 계산
-    const updateJoystickCenter = () => {
-      const rect = joystick.getBoundingClientRect();
-      this.touchState.joystickCenter = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-      };
-      this.touchState.joystickRadius =
-        Math.min(rect.width, rect.height) / 2 - 20;
+    // 게임 영역의 경계 업데이트
+    const updateGameAreaBounds = () => {
+      if (this.touchControls.gameContainer) {
+        this.touchState.gameAreaBounds =
+          this.touchControls.gameContainer.getBoundingClientRect();
+        console.log(
+          '🎮 게임 영역 경계 업데이트:',
+          this.touchState.gameAreaBounds
+        );
+      }
     };
 
-    updateJoystickCenter();
-    window.addEventListener('resize', updateJoystickCenter);
+    updateGameAreaBounds();
+    window.addEventListener('resize', updateGameAreaBounds);
 
     // 터치 시작
     const handleTouchStart = (e: TouchEvent) => {
+      if (!this.touchState.gameAreaBounds) return;
+
       e.preventDefault();
-      if (e.touches[0]) {
-        this.touchState.joystickActive = true;
-        this.handleJoystickMove(e.touches[0]);
+      const touch = e.touches[0];
+
+      // 터치 객체가 존재하는지 확인
+      if (!touch) return;
+
+      // 게임 영역 내에서만 터치 처리
+      if (this.isTouchInGameArea(touch)) {
+        this.touchState.isActive = true;
+        this.touchState.autoShoot = true; // 터치하면 자동 발사 시작
+        this.handleFullScreenTouch(touch);
+        console.log('🎮 전체 화면 터치 시작 + 자동 발사 활성화');
       }
     };
 
     // 터치 이동
     const handleTouchMove = (e: TouchEvent) => {
-      if (!this.touchState.joystickActive || !e.touches[0]) return;
+      if (!this.touchState.isActive) return;
+
+      const touch = e.touches[0];
+      if (!touch) return;
+
       e.preventDefault();
-      this.handleJoystickMove(e.touches[0]);
+
+      if (this.isTouchInGameArea(touch)) {
+        this.handleFullScreenTouch(touch);
+      }
     };
 
     // 터치 종료
     const handleTouchEnd = (e: TouchEvent) => {
       e.preventDefault();
-      this.touchState.joystickActive = false;
+      this.touchState.isActive = false;
+      this.touchState.autoShoot = false; // 터치 종료 시 자동 발사 중지
       this.touchState.currentTouch = null;
-
-      // 조이스틱 노브를 중앙으로 복원
-      knob.style.transform = 'translate(-50%, -50%)';
 
       // 이동 키 상태 초기화
       this.keyState.left = false;
       this.keyState.right = false;
       this.keyState.up = false;
       this.keyState.down = false;
+      this.keyState.space = false; // 발사도 중지
+
+      console.log('🎮 전체 화면 터치 종료 + 자동 발사 중지');
     };
 
-    joystick.addEventListener('touchstart', handleTouchStart, {
-      passive: false,
-    });
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
-  }
-
-  private handleJoystickMove(touch: Touch): void {
-    if (!this.touchControls.joystickKnob) return;
-
-    const center = this.touchState.joystickCenter;
-    const radius = this.touchState.joystickRadius;
-
-    // 터치 위치 계산
-    const deltaX = touch.clientX - center.x;
-    const deltaY = touch.clientY - center.y;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-    // 조이스틱 범위 제한
-    let x = deltaX;
-    let y = deltaY;
-
-    if (distance > radius) {
-      x = (deltaX / distance) * radius;
-      y = (deltaY / distance) * radius;
+    // 게임 컨테이너에 터치 이벤트 추가
+    if (this.touchControls.gameContainer) {
+      this.touchControls.gameContainer.addEventListener(
+        'touchstart',
+        handleTouchStart,
+        { passive: false }
+      );
     }
 
-    // 노브 위치 업데이트
-    const knobX = (x / radius) * 20; // 최대 20px 이동
-    const knobY = (y / radius) * 20;
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+    document.addEventListener('touchcancel', handleTouchEnd, {
+      passive: false,
+    });
+  }
 
-    this.touchControls.joystickKnob.style.transform = `translate(calc(-50% + ${knobX}px), calc(-50% + ${knobY}px))`;
+  private isTouchInGameArea(touch: Touch): boolean {
+    if (!this.touchState.gameAreaBounds) return false;
+
+    const bounds = this.touchState.gameAreaBounds;
+    return (
+      touch.clientX >= bounds.left &&
+      touch.clientX <= bounds.right &&
+      touch.clientY >= bounds.top &&
+      touch.clientY <= bounds.bottom
+    );
+  }
+
+  private handleFullScreenTouch(touch: Touch): void {
+    if (!this.touchState.gameAreaBounds) return;
+
+    const bounds = this.touchState.gameAreaBounds;
+
+    // 게임 영역 내에서의 상대 위치 계산 (0~1 범위)
+    const relativeX = (touch.clientX - bounds.left) / bounds.width;
+    const relativeY = (touch.clientY - bounds.top) / bounds.height;
+
+    // 현재 플레이어 위치 (게임 영역 중앙 기준)
+    const centerX = 0.5;
+    const centerY = 0.8; // 플레이어는 보통 화면 하단에 위치
+
+    // 터치 위치와 플레이어 위치의 차이 계산
+    const deltaX = relativeX - centerX;
+    const deltaY = relativeY - centerY;
+
+    // 이동 임계값 설정 (더 민감하게)
+    const threshold = 0.05; // 5% 이상 차이가 날 때만 이동
 
     // 키 상태 업데이트
-    const threshold = radius * 0.3; // 30% 임계값
+    this.keyState.left = deltaX < -threshold;
+    this.keyState.right = deltaX > threshold;
+    this.keyState.up = deltaY < -threshold;
+    this.keyState.down = deltaY > threshold;
 
-    this.keyState.left = x < -threshold;
-    this.keyState.right = x > threshold;
-    this.keyState.up = y < -threshold;
-    this.keyState.down = y > threshold;
+    // 자동 발사 상태 유지
+    this.keyState.space = this.touchState.autoShoot;
 
+    // 터치 위치 저장
     this.touchState.currentTouch = { x: touch.clientX, y: touch.clientY };
+
+    // 디버깅: 터치 상태 로그 (간헐적으로만)
+    if (Math.random() < 0.05) {
+      // 5%만 로그 출력
+      console.log('🎮 전체 화면 터치 상태:', {
+        relativePos: {
+          x: Math.round(relativeX * 100),
+          y: Math.round(relativeY * 100),
+        },
+        delta: { x: Math.round(deltaX * 100), y: Math.round(deltaY * 100) },
+        keys: {
+          left: this.keyState.left,
+          right: this.keyState.right,
+          up: this.keyState.up,
+          down: this.keyState.down,
+          shoot: this.keyState.space,
+        },
+      });
+    }
   }
 
   private setupButtonEvents(): void {
-    // 발사 버튼
-    if (this.touchControls.shootBtn) {
-      this.setupButton(this.touchControls.shootBtn, 'space');
-    }
+    // 전체 화면 터치 모드에서는 발사 버튼이 필요 없음 (터치 시 자동 발사)
+    console.log('🎮 전체 화면 터치 모드 - 별도 발사 버튼 불필요');
 
-    // 일시정지 버튼
+    // 일시정지 버튼만 유지 (필요시)
     if (this.touchControls.pauseBtn) {
       this.setupButton(this.touchControls.pauseBtn, 'escape');
     }
@@ -343,5 +400,13 @@ export class InputManager {
 
   public getCurrentTouchPosition(): { x: number; y: number } | null {
     return this.touchState.currentTouch;
+  }
+
+  public isAutoShootActive(): boolean {
+    return this.touchState.autoShoot;
+  }
+
+  public getTouchState(): Readonly<typeof this.touchState> {
+    return this.touchState;
   }
 }

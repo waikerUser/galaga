@@ -1191,3 +1191,230 @@ body {
     }
   }
 }
+
+// ============================================
+// 모바일 터치 컨트롤
+// ============================================
+
+#mobile-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px; // 높이 감소 (150px → 120px)
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 15px; // 패딩 감소 (20px → 15px)
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 500;
+
+  &.hidden {
+    display: none !important;
+  }
+
+  &.active {
+    display: flex !important;
+  }
+}
+
+.control-area {
+  pointer-events: auto;
+
+  &.control-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &.control-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.joystick-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.joystick {
+  width: 70px; // 크기 감소 (80px → 70px)
+  height: 70px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4); // 테두리 감소 (3px → 2px)
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+
+  .joystick-knob {
+    width: 26px; // 크기 감소 (30px → 26px)
+    height: 26px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+    pointer-events: none;
+  }
+}
+
+.joystick-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  text-align: center;
+  user-select: none;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; // 간격 감소 (15px → 10px)
+}
+
+.action-btn {
+  width: 55px; // 크기 감소 (60px → 55px)
+  height: 55px;
+  background: rgba(255, 100, 100, 0.8);
+  border: 2px solid rgba(255, 100, 100, 1);
+  border-radius: 50%;
+  color: white;
+  font-size: 12px; // 폰트 크기 감소 (14px → 12px)
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: all 0.1s ease;
+
+  &:active {
+    transform: scale(0.95);
+    background: rgba(255, 100, 100, 1);
+  }
+
+  &#shoot-btn {
+    background: rgba(255, 100, 100, 0.8);
+    border-color: rgba(255, 100, 100, 1);
+
+    &:active {
+      background: rgba(255, 100, 100, 1);
+    }
+  }
+
+  &#pause-btn {
+    background: rgba(100, 150, 255, 0.8);
+    border-color: rgba(100, 150, 255, 1);
+
+    &:active {
+      background: rgba(100, 150, 255, 1);
+    }
+  }
+}
+
+.control-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.control-btn {
+  padding: 6px 12px;
+  background: rgba(100, 100, 100, 0.8);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 11px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: all 0.2s ease;
+
+  &:active {
+    background: rgba(150, 150, 150, 1);
+  }
+
+  &.active {
+    background: rgba(100, 200, 100, 0.8);
+  }
+}
+
+// 모바일 환경에서만 터치 컨트롤 표시
+@media (max-width: 767px) {
+  // 전체 화면 터치 모드에서는 터치 컨트롤 UI 완전히 숨김
+  #mobile-controls {
+    display: none !important;
+  }
+
+  // 모바일에서 게임 UI 최적화
+  #game-ui {
+    padding: 8px 12px !important; // 패딩 감소
+    margin-bottom: 2px !important; // 마진 감소
+    font-size: 14px !important; // 폰트 크기 감소
+  }
+
+  #game-container {
+    padding: 4px !important; // 컨테이너 패딩 최소화
+    border: none !important; // 테두리 제거로 공간 절약
+    cursor: crosshair !important; // 터치 타겟임을 표시
+    user-select: none !important; // 텍스트 선택 방지
+    -webkit-touch-callout: none !important; // 길게 누르기 메뉴 비활성화
+  }
+
+  // 게임 캔버스 높이 최적화 (터치 컨트롤 UI 없으므로 더 큰 공간 활용)
+  #game-canvas {
+    height: auto !important; // 자동 높이 조정
+    max-height: calc(
+      100vh - 120px
+    ) !important; // 터치 컨트롤 UI 제거로 더 넓게 (170px → 120px)
+    touch-action: none !important; // 기본 터치 동작 비활성화
+  }
+
+  // 게임 중앙 영역 높이 최적화
+  #game-center-area {
+    min-height: calc(
+      100vh - 120px
+    ) !important; // 터치 컨트롤 UI 제거로 더 넓게 (170px → 120px)
+  }
+
+  // 주요 레이아웃 그리드 최적화
+  #main-layout {
+    grid-template-rows: minmax(auto, 60px) // top-ad-area (더 작게)
+      1fr // game-center-area (최대한 크게)
+      minmax(auto, 60px) !important; // bottom-ad-area (더 작게)
+    gap: 2px !important; // 간격 최소화
+  }
+
+  // 전체 화면 터치 모드 안내 메시지 (선택사항)
+  #game-container::before {
+    content: '화면을 터치하여 이동 및 발사';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 10;
+    animation: fadeOut 3s ease-out 2s forwards;
+  }
+
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
