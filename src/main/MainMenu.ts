@@ -1,4 +1,5 @@
 import { Router } from '../shared/Router';
+import { LanguageManager, t, LanguageCode } from '../shared/Language';
 
 interface GameCard {
   id: string;
@@ -11,47 +12,56 @@ interface GameCard {
 }
 
 export class MainMenu {
-  private router: Router;
-  private container: HTMLElement;
+  private router!: Router;
+  private container!: HTMLElement;
+  private languageManager!: LanguageManager;
 
-  private games: GameCard[] = [
+  private getGames(): GameCard[] {
+    return [
     {
       id: 'galaga',
-      title: '🚀 Galaga Shooter',
-      description: '클래식 갤러그 스타일 우주 슈팅 게임',
+      title: `🚀 ${t('galagaTitle')}`,
+      description: t('galagaDescription'),
       backgroundColor: '#1a1a2e',
       textColor: '#ffffff',
       available: true,
     },
     {
       id: 'tetris',
-      title: '🧩 Tetris',
-      description: '클래식 테트리스 퍼즐 게임',
+      title: `🧩 ${t('tetrisTitle')}`,
+      description: t('tetrisDescription'),
       backgroundColor: '#2d4059',
       textColor: '#ffffff',
       available: false,
     },
     {
       id: 'snake',
-      title: '🐍 Snake Game',
-      description: '전설적인 스네이크 게임',
+      title: `🐍 ${t('snakeTitle')}`,
+      description: t('snakeDescription'),
       backgroundColor: '#ea5455',
       textColor: '#ffffff',
       available: false,
     },
     {
       id: 'pong',
-      title: '🏓 Pong',
-      description: '최초의 아케이드 게임 퐁',
+      title: `🏓 ${t('pongTitle')}`,
+      description: t('pongDescription'),
       backgroundColor: '#f07b3f',
       textColor: '#ffffff',
       available: false,
     },
   ];
+  }
 
   constructor(router: Router) {
     this.router = router;
     this.container = router.getContainer();
+    this.languageManager = LanguageManager.getInstance();
+    
+    // 언어 변경 리스너 추가
+    this.languageManager.addLanguageChangeListener(() => {
+      this.render();
+    });
   }
 
   public render(): void {
@@ -66,8 +76,8 @@ export class MainMenu {
           <div id="main-top-banner-ad" class="main-ad-container ad-preview">
             <div class="ad-preview-content">
               <div class="ad-icon">📺</div>
-              <div class="ad-text">상단 배너 광고 영역 (728x90)</div>
-              <div class="ad-status">AdSense 승인 후 광고 표시</div>
+              <div class="ad-text">${t('topBannerAd')}</div>
+              <div class="ad-status">${t('adApprovalText')}</div>
             </div>
           </div>
         </div>
@@ -77,9 +87,9 @@ export class MainMenu {
           <div id="main-sidebar-ad-left" class="main-ad-container main-sidebar-ad ad-preview">
             <div class="ad-preview-content vertical">
               <div class="ad-icon">📱</div>
-              <div class="ad-text">좌측 사이드바 광고</div>
+              <div class="ad-text">${t('leftSidebarAd')}</div>
               <div class="ad-size">(160x600)</div>
-              <div class="ad-status">승인 후 표시</div>
+              <div class="ad-status">${t('adApprovalText')}</div>
             </div>
           </div>
         </div>
@@ -88,49 +98,53 @@ export class MainMenu {
         <div id="main-content-area" class="main-content-area">
           <div id="main-menu" class="main-menu">
             <header class="arcade-header">
-              <h1 class="arcade-title">🕹️ MINI ARCADE</h1>
-              <p class="arcade-subtitle">클래식 게임을 즐겨보세요!</p>
+              <h1 class="arcade-title">${t('mainTitle')}</h1>
+              <p class="arcade-subtitle">${t('mainSubtitle')}</p>
+              
+              <!-- 언어 전환 버튼 -->
+              <div class="language-switcher">
+                <button class="language-btn ${this.languageManager.getCurrentLanguage() === 'ko' ? 'active' : ''}" data-lang="ko">
+                  ${t('korean')}
+                </button>
+                <button class="language-btn ${this.languageManager.getCurrentLanguage() === 'en' ? 'active' : ''}" data-lang="en">
+                  ${t('english')}
+                </button>
+              </div>
             </header>
             
             <!-- 사이트 소개 섹션 (AdSense 정책 준수) -->
             <section class="content-section intro-section">
-              <h2>🎮 Mini Arcade 소개</h2>
-              <p>Mini Arcade는 클래식 아케이드 게임을 현대적인 웹 기술로 재탄생시킨 온라인 게임 플랫폼입니다. 
-              HTML5와 TypeScript를 활용하여 구현된 고품질 게임들을 브라우저에서 바로 즐길 수 있습니다.</p>
+              <h2>${t('introTitle')}</h2>
+              <p>${t('introDescription')}</p>
               
-              <h3>✨ 주요 특징</h3>
+              <h3>${t('featuresTitle')}</h3>
               <ul>
-                <li><strong>무료 게임:</strong> 모든 게임을 무료로 즐길 수 있습니다</li>
-                <li><strong>브라우저 호환:</strong> 별도 설치 없이 웹브라우저에서 바로 실행</li>
-                <li><strong>모바일 지원:</strong> PC와 모바일 모두에서 최적화된 게임 경험</li>
-                <li><strong>클래식 게임:</strong> 80년대 아케이드 게임의 향수를 느낄 수 있습니다</li>
+                <li><strong>${t('freeGameFeature')}</strong> ${t('freeGameDescription')}</li>
+                <li><strong>${t('browserCompatFeature')}</strong> ${t('browserCompatDescription')}</li>
+                <li><strong>${t('mobileFeature')}</strong> ${t('mobileDescription')}</li>
+                <li><strong>${t('classicFeature')}</strong> ${t('classicDescription')}</li>
               </ul>
             </section>
 
             <!-- 게임 가이드 섹션 -->
             <section class="content-section guide-section">
-              <h2>🕹️ 게임 플레이 가이드</h2>
+              <h2>${t('guideTitle')}</h2>
               
-              <h3>갤러그 슈터 게임 방법</h3>
+              <h3>${t('galagaGuideTitle')}</h3>
               <div class="game-guide">
                 <div class="guide-item">
-                  <h4>🎯 조작 방법</h4>
-                  <p><strong>PC:</strong> 방향키로 이동, 스페이스바로 발사<br>
-                  <strong>모바일:</strong> 화면 터치로 이동 및 자동 발사</p>
+                  <h4>${t('controlsTitle')}</h4>
+                  <p>${t('controlsDescription').replace(/\\n/g, '<br>')}</p>
                 </div>
                 
                 <div class="guide-item">
-                  <h4>⭐ 게임 팁</h4>
-                  <p>• 적의 움직임 패턴을 파악하여 효율적으로 공격하세요<br>
-                  • 파워업 아이템을 획득하여 화력을 강화할 수 있습니다<br>
-                  • 방패 아이템으로 일시적인 무적 상태를 유지하세요</p>
+                  <h4>${t('tipsTitle')}</h4>
+                  <p>${t('tipsDescription').replace(/\\n/g, '<br>')}</p>
                 </div>
                 
                 <div class="guide-item">
-                  <h4>🏆 점수 시스템</h4>
-                  <p>• 적 처치: 기본 점수 획득<br>
-                  • 연속 명중: 콤보 보너스 점수<br>
-                  • 보스 처치: 대량 보너스 점수</p>
+                  <h4>${t('scoreSystemTitle')}</h4>
+                  <p>${t('scoreSystemDescription').replace(/\\n/g, '<br>')}</p>
                 </div>
               </div>
             </section>
@@ -142,79 +156,66 @@ export class MainMenu {
 
             <!-- 최신 소식 섹션 -->
             <section class="content-section news-section">
-              <h2>📢 최신 소식</h2>
+              <h2>${t('newsTitle')}</h2>
               
               <div class="news-item">
-                <h3>🚀 갤러그 게임 업데이트 (2024.12)</h3>
-                <p>• 모바일 터치 컨트롤 개선으로 더욱 부드러운 조작감 제공<br>
-                • 새로운 파워업 시스템 및 방패 아이템 추가<br>
-                • 보스전 시스템 및 난이도 조절 기능 구현</p>
+                <h3>${t('galagaUpdateTitle')}</h3>
+                <p>${t('galagaUpdateDescription').replace(/\\n/g, '<br>')}</p>
               </div>
               
               <div class="news-item">
-                <h3>🎮 추가 예정 게임</h3>
-                <p>• <strong>테트리스:</strong> 클래식 블록 퍼즐 게임 개발 중<br>
-                • <strong>스네이크:</strong> 추억의 뱀 게임 제작 준비 중<br>
-                • <strong>퐁:</strong> 최초의 아케이드 게임 구현 예정</p>
+                <h3>${t('upcomingGamesTitle')}</h3>
+                <p>${t('upcomingGamesDescription').replace(/\\n/g, '<br>')}</p>
               </div>
             </section>
 
             <!-- FAQ 섹션 -->
             <section class="content-section faq-section">
-              <h2>❓ 자주 묻는 질문</h2>
+              <h2>${t('faqTitle')}</h2>
               
               <div class="faq-item">
-                <h3>Q. 게임이 실행되지 않아요</h3>
-                <p>A. 최신 버전의 웹브라우저(Chrome, Firefox, Safari, Edge)를 사용하시고, 
-                JavaScript가 활성화되어 있는지 확인해주세요. 모바일에서는 화면을 세로 또는 가로로 회전해보시기 바랍니다.</p>
+                <h3>${t('faqGameNotWorking')}</h3>
+                <p>${t('faqGameNotWorkingAnswer')}</p>
               </div>
               
               <div class="faq-item">
-                <h3>Q. 모바일에서도 게임을 할 수 있나요?</h3>
-                <p>A. 네! 모든 게임은 모바일 환경에 최적화되어 있습니다. 
-                터치 컨트롤을 지원하며, 다양한 화면 크기에 맞춰 자동으로 조정됩니다.</p>
+                <h3>${t('faqMobileSupport')}</h3>
+                <p>${t('faqMobileSupportAnswer')}</p>
               </div>
               
               <div class="faq-item">
-                <h3>Q. 게임 점수가 저장되나요?</h3>
-                <p>A. 현재는 세션 내에서만 점수가 유지됩니다. 
-                추후 업데이트를 통해 최고 점수 저장 기능을 추가할 예정입니다.</p>
+                <h3>${t('faqScoreSaving')}</h3>
+                <p>${t('faqScoreSavingAnswer')}</p>
               </div>
               
               <div class="faq-item">
-                <h3>Q. 새로운 게임을 요청할 수 있나요?</h3>
-                <p>A. 물론입니다! 원하시는 클래식 게임이 있다면 언제든 의견을 주시기 바랍니다. 
-                사용자 요청을 우선으로 새로운 게임을 개발하고 있습니다.</p>
+                <h3>${t('faqGameRequest')}</h3>
+                <p>${t('faqGameRequestAnswer')}</p>
               </div>
             </section>
 
             <!-- 이용 안내 섹션 -->
             <section class="content-section terms-section">
-              <h2>📋 이용 안내</h2>
+              <h2>${t('termsTitle')}</h2>
               
               <div class="terms-item">
-                <h3>🔒 개인정보 보호</h3>
-                <p>Mini Arcade는 사용자의 개인정보를 수집하지 않으며, 
-                게임 플레이에 필요한 최소한의 정보만을 브라우저에 임시 저장합니다. 
-                모든 데이터는 세션 종료 시 자동으로 삭제됩니다.</p>
+                <h3>${t('privacyTitle')}</h3>
+                <p>${t('privacyDescription')}</p>
               </div>
               
               <div class="terms-item">
-                <h3>🎯 서비스 이용</h3>
-                <p>• 모든 게임은 무료로 제공됩니다<br>
-                • 상업적 목적의 무단 복제 및 배포를 금지합니다<br>
-                • 게임 내 콘텐츠의 저작권은 Mini Arcade에 있습니다</p>
+                <h3>${t('serviceTitle')}</h3>
+                <p>${t('serviceDescription').replace(/\\n/g, '<br>')}</p>
               </div>
               
               <div class="terms-item">
-                <h3>💡 서비스 개선</h3>
-                <p>사용자 경험 향상을 위해 지속적으로 게임을 업데이트하고 있습니다. 
-                버그 신고나 기능 제안이 있으시면 언제든 연락해주시기 바랍니다.</p>
+                <h3>${t('improvementTitle')}</h3>
+                <p>${t('improvementDescription')}</p>
               </div>
             </section>
             
             <footer class="arcade-footer">
-              <p>&copy; 2024 Mini Arcade - Built with ❤️</p>
+              <p>${t('footer')}</p>
             </footer>
           </div>
         </div>
@@ -224,9 +225,9 @@ export class MainMenu {
           <div id="main-sidebar-ad-right" class="main-ad-container main-sidebar-ad ad-preview">
             <div class="ad-preview-content vertical">
               <div class="ad-icon">📱</div>
-              <div class="ad-text">우측 사이드바 광고</div>
+              <div class="ad-text">${t('rightSidebarAd')}</div>
               <div class="ad-size">(160x600)</div>
-              <div class="ad-status">승인 후 표시</div>
+              <div class="ad-status">${t('adApprovalText')}</div>
             </div>
           </div>
         </div>
@@ -236,8 +237,8 @@ export class MainMenu {
           <div id="main-bottom-banner-ad" class="main-ad-container ad-preview">
             <div class="ad-preview-content">
               <div class="ad-icon">📺</div>
-              <div class="ad-text">하단 배너 광고 영역 (728x90)</div>
-              <div class="ad-status">AdSense 승인 후 광고 표시</div>
+              <div class="ad-text">${t('bottomBannerAd')}</div>
+              <div class="ad-status">${t('adApprovalText')}</div>
             </div>
           </div>
         </div>
@@ -249,7 +250,7 @@ export class MainMenu {
   }
 
   private renderGameCards(): string {
-    return this.games
+    return this.getGames()
       .map(
         (game) => `
       <div class="game-card ${game.available ? 'available' : 'unavailable'}" 
@@ -263,8 +264,8 @@ export class MainMenu {
           <div class="game-status">
             ${
               game.available
-                ? '<button class="play-btn">🎮 플레이</button>'
-                : '<span class="coming-soon">🔜 출시 예정</span>'
+                ? `<button class="play-btn">${t('playButton')}</button>`
+                : `<span class="coming-soon">${t('comingSoon')}</span>`
             }
           </div>
         </div>
@@ -276,6 +277,17 @@ export class MainMenu {
   }
 
   private setupEventListeners(): void {
+    // 언어 전환 버튼 이벤트
+    const languageButtons = this.container.querySelectorAll('.language-btn');
+    languageButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const lang = (button as HTMLElement).dataset.lang as LanguageCode;
+        if (lang && lang !== this.languageManager.getCurrentLanguage()) {
+          this.languageManager.setLanguage(lang);
+        }
+      });
+    });
+
     const gameCards = this.container.querySelectorAll('.game-card.available');
 
     gameCards.forEach((card) => {
@@ -546,6 +558,46 @@ export class MainMenu {
         letter-spacing: 1px;
       }
 
+      /* 언어 전환 버튼 스타일 */
+      .language-switcher {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+
+      .language-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.8);
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+      }
+
+      .language-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: #ffffff;
+        transform: translateY(-2px);
+      }
+
+      .language-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .language-btn.active:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+
       .games-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -776,6 +828,15 @@ export class MainMenu {
         .arcade-subtitle {
           font-size: 1.1rem;
           margin: 15px 0;
+        }
+        
+        .language-switcher {
+          margin-bottom: 20px;
+        }
+        
+        .language-btn {
+          font-size: 0.8rem;
+          padding: 6px 12px;
         }
         
         .arcade-header {

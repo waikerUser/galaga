@@ -1,5 +1,6 @@
 import { Router } from './shared/Router';
 import { MainMenu } from './main/MainMenu';
+import { t } from './shared/Language';
 import './styles/main.scss';
 
 class MiniArcade {
@@ -121,23 +122,23 @@ class MiniArcade {
             <div id="galaga-game-container">
               <!-- 게임 헤더 (메뉴로 돌아가기) -->
               <div class="game-header">
-                <button id="back-to-menu" class="back-btn">← 메뉴로 돌아가기</button>
-                <h2 class="game-title">🚀 Galaga Shooter</h2>
+                <button id="back-to-menu" class="back-btn">← ${t('backToMenu')}</button>
+                <h2 class="game-title">🚀 ${t('galagaTitle')}</h2>
               </div>
 
               <!-- 게임 UI (점수, 생명, 스테이지) -->
               <div id="game-ui">
                 <div class="ui-left">
-                  <div class="stat-item">점수: <span id="score">0</span></div>
-                  <div class="stat-item">스테이지: <span id="stage">1</span></div>
-                  <div class="stat-item">아이템: <span id="items-count">0</span></div>
+                  <div class="stat-item">${t('score')}: <span id="score">0</span></div>
+                  <div class="stat-item">${t('stage')}: <span id="stage">1</span></div>
+                  <div class="stat-item">${t('items')}: <span id="items-count">0</span></div>
                 </div>
                 <div class="ui-center">
-                  <div class="stat-item">미사일: <span id="missile-count">1</span></div>
-                  <div class="stat-item">티어: <span id="missile-tier">T1</span></div>
+                  <div class="stat-item">${t('missile')}: <span id="missile-count">1</span></div>
+                  <div class="stat-item">${t('tier')}: <span id="missile-tier">T1</span></div>
                 </div>
                 <div class="ui-right">
-                  <div class="stat-item">생명: <span id="lives">3</span></div>
+                  <div class="stat-item">${t('lives')}: <span id="lives">3</span></div>
                 </div>
               </div>
 
@@ -171,29 +172,29 @@ class MiniArcade {
 
               <!-- 시작 화면 -->
               <div id="start-screen" class="screen">
-                <h1>🚀 Galaga Shooter</h1>
-                <p>클래식 아케이드 슈팅 게임을 즐겨보세요!</p>
-                <button id="start-btn" class="game-btn">게임 시작</button>
+                <h1>🚀 ${t('galagaTitle')}</h1>
+                <p>${t('galagaDescription')}</p>
+                <button id="start-btn" class="game-btn">${t('gameStart')}</button>
               </div>
 
               <!-- 난이도 선택 화면 -->
               <div id="difficulty-screen" class="screen hidden">
-                <h2>⚡ 난이도 선택</h2>
+                <h2>⚡ ${t('selectDifficulty')}</h2>
                 <p>원하는 난이도를 선택하세요</p>
                 <div class="difficulty-buttons">
                   <button id="easy-btn" class="difficulty-btn easy">
                     <span class="difficulty-emoji">😊</span>
-                    <span class="difficulty-name">쉬움</span>
+                    <span class="difficulty-name">${t('easy')}</span>
                     <span class="difficulty-desc">편안한 게임</span>
                   </button>
                   <button id="normal-btn" class="difficulty-btn normal">
                     <span class="difficulty-emoji">😐</span>
-                    <span class="difficulty-name">보통</span>
+                    <span class="difficulty-name">${t('normal')}</span>
                     <span class="difficulty-desc">균형잡힌 도전</span>
                   </button>
                   <button id="hard-btn" class="difficulty-btn hard">
                     <span class="difficulty-emoji">😤</span>
-                    <span class="difficulty-name">어려움</span>
+                    <span class="difficulty-name">${t('hard')}</span>
                     <span class="difficulty-desc">극한의 도전</span>
                   </button>
                 </div>
@@ -202,7 +203,7 @@ class MiniArcade {
 
               <!-- 게임 오버 화면 -->
               <div id="game-over" class="screen hidden">
-                <h2>💀 게임 오버</h2>
+                <h2>💀 ${t('gameOver')}</h2>
                 <div class="game-over-stats">
                   <p>최종 점수: <span id="final-score" class="highlight">0</span></p>
                   <p>도달 레벨: <span id="final-level" class="highlight">1</span></p>
@@ -210,8 +211,8 @@ class MiniArcade {
                   <p>정확도: <span id="final-accuracy" class="highlight">0%</span></p>
                 </div>
                 <div class="game-over-buttons">
-                  <button id="restart-btn" class="game-btn">다시 시작</button>
-                  <button id="menu-btn" class="game-btn secondary">메인 메뉴</button>
+                  <button id="restart-btn" class="game-btn">${t('restart')}</button>
+                  <button id="menu-btn" class="game-btn secondary">${t('backToMenu')}</button>
                 </div>
               </div>
 
@@ -377,7 +378,7 @@ class MiniArcade {
         <div class="coming-soon-content">
           <h2>🔜 ${gameName}</h2>
           <p>이 게임은 곧 출시될 예정입니다!</p>
-          <button id="back-to-menu" class="back-btn">메뉴로 돌아가기</button>
+          <button id="back-to-menu" class="back-btn">${t('backToMenu')}</button>
         </div>
       </div>
     `;
