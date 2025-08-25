@@ -329,7 +329,7 @@ export const translations: Record<LanguageCode, TranslationStrings> = {
 
 export class LanguageManager {
   private static instance: LanguageManager;
-  private currentLanguage: LanguageCode = 'ko';
+  private currentLanguage: LanguageCode = 'en';
   private listeners: Array<(language: LanguageCode) => void> = [];
 
   private constructor() {
@@ -364,6 +364,7 @@ export class LanguageManager {
     if (browserLang.startsWith('ko')) {
       this.currentLanguage = 'ko';
     } else {
+      // 기본값으로 영어 사용
       this.currentLanguage = 'en';
     }
   }

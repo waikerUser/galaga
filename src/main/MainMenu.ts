@@ -1,5 +1,6 @@
 import { Router } from '../shared/Router';
 import { LanguageManager, t, LanguageCode } from '../shared/Language';
+import { seoManager } from '../shared/SEO';
 
 interface GameCard {
   id: string;
@@ -59,7 +60,11 @@ export class MainMenu {
     this.languageManager = LanguageManager.getInstance();
     
     // 언어 변경 리스너 추가
-    this.languageManager.addLanguageChangeListener(() => {
+    this.languageManager.addLanguageChangeListener((language: LanguageCode) => {
+      // SEO 메타 태그 업데이트
+      const mainMenuMeta = seoManager.getMetaDataForMainMenu(language);
+      seoManager.updateMetaTags(mainMenuMeta);
+      
       this.render();
     });
   }

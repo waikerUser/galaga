@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Main page - English -->
+  <url>
+    <loc>https://waikeruser.github.io/galaga/?lang=en</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://waikeruser.github.io/galaga/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waikeruser.github.io/galaga/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waikeruser.github.io/galaga/"/>
+  </url>
+  
+  <!-- Main page - Korean -->
+  <url>
+    <loc>https://waikeruser.github.io/galaga/?lang=ko</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://waikeruser.github.io/galaga/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waikeruser.github.io/galaga/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waikeruser.github.io/galaga/"/>
+  </url>
+  
+  <!-- Galaga Game - English -->
+  <url>
+    <loc>https://waikeruser.github.io/galaga/#galaga?lang=en</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://waikeruser.github.io/galaga/#galaga?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waikeruser.github.io/galaga/#galaga?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waikeruser.github.io/galaga/#galaga"/>
+  </url>
+  
+  <!-- Galaga Game - Korean -->
+  <url>
+    <loc>https://waikeruser.github.io/galaga/#galaga?lang=ko</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://waikeruser.github.io/galaga/#galaga?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waikeruser.github.io/galaga/#galaga?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waikeruser.github.io/galaga/#galaga"/>
+  </url>
+  
+  <!-- Future games (for when they are implemented) -->
+  <url>
+    <loc>https://waikeruser.github.io/galaga/#tetris</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://waikeruser.github.io/galaga/#snake</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://waikeruser.github.io/galaga/#pong</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>

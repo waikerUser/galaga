@@ -1,6 +1,8 @@
 import { Router } from './shared/Router';
 import { MainMenu } from './main/MainMenu';
 import { t } from './shared/Language';
+import { LanguageManager } from './shared/Language';
+import { seoManager } from './shared/SEO';
 import './styles/main.scss';
 
 class MiniArcade {
@@ -75,6 +77,12 @@ class MiniArcade {
     // body에 메인 메뉴 클래스 추가
     document.body.className = 'main-menu-active';
 
+    // SEO 메타 태그 업데이트 (메인 메뉴용)
+    const currentLang = LanguageManager.getInstance().getCurrentLanguage();
+    const mainMenuMeta = seoManager.getMetaDataForMainMenu(currentLang);
+    seoManager.updateMetaTags(mainMenuMeta);
+    seoManager.addStructuredData();
+
     this.mainMenu.render();
   }
 
@@ -84,6 +92,11 @@ class MiniArcade {
     try {
       // body 클래스 변경
       document.body.className = 'game-active galaga-active';
+
+      // SEO 메타 태그 업데이트 (갤러그 게임용)
+      const currentLang = LanguageManager.getInstance().getCurrentLanguage();
+      const galagaMeta = seoManager.getMetaDataForGalagaGame(currentLang);
+      seoManager.updateMetaTags(galagaMeta);
 
       // 게임 컨테이너를 갤러그 게임 전용 구조로 완전히 교체
       const container = this.router.getContainer();

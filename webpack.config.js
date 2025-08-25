@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
@@ -45,7 +46,29 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      title: 'Gallag Shooting Game',
+      title: '🕹️ Mini Arcade - Classic Arcade Games',
+      meta: {
+        description:
+          'Play classic arcade games for free! Enjoy nostalgic games like Galaga, Tetris, Snake and more directly in your browser.',
+        keywords:
+          'arcade games, free games, galaga, tetris, snake, classic games, browser games, online games, retro games',
+        author: 'Mini Arcade Team',
+        viewport:
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
+        'theme-color': '#1a1a2e',
+      },
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'public/robots.txt', to: 'robots.txt' },
+        { from: 'public/sitemap.xml', to: 'sitemap.xml' },
+        { from: 'public/favicon.ico', to: 'favicon.ico' },
+        {
+          from: 'public',
+          to: '',
+          globOptions: { ignore: ['**/*.txt', '**/*.xml', '**/*.ico'] },
+        },
+      ],
     }),
   ],
   devServer: {
