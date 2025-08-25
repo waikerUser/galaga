@@ -63,29 +63,24 @@ export class MainMenu {
       <div id="main-menu-layout" class="main-menu-layout">
         <!-- 상단 광고 영역 -->
         <div id="main-top-ad-area" class="main-ad-area">
-          <div id="main-top-banner-ad" class="main-ad-container hidden">
-            <ins
-              class="adsbygoogle"
-              style="display: block"
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-              data-ad-slot="1234567890"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
+          <div id="main-top-banner-ad" class="main-ad-container ad-preview">
+            <div class="ad-preview-content">
+              <div class="ad-icon">📺</div>
+              <div class="ad-text">상단 배너 광고 영역 (728x90)</div>
+              <div class="ad-status">AdSense 승인 후 광고 표시</div>
+            </div>
           </div>
         </div>
 
         <!-- 좌측 광고 영역 -->
         <div id="main-left-ad-area" class="main-ad-area">
-          <div id="main-sidebar-ad-left" class="main-ad-container main-sidebar-ad hidden">
-            <ins
-              class="adsbygoogle main-sidebar-ad-unit"
-              style="display: block"
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-              data-ad-slot="0987654321"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
+          <div id="main-sidebar-ad-left" class="main-ad-container main-sidebar-ad ad-preview">
+            <div class="ad-preview-content vertical">
+              <div class="ad-icon">📱</div>
+              <div class="ad-text">좌측 사이드바 광고</div>
+              <div class="ad-size">(160x600)</div>
+              <div class="ad-status">승인 후 표시</div>
+            </div>
           </div>
         </div>
 
@@ -97,9 +92,126 @@ export class MainMenu {
               <p class="arcade-subtitle">클래식 게임을 즐겨보세요!</p>
             </header>
             
+            <!-- 사이트 소개 섹션 (AdSense 정책 준수) -->
+            <section class="content-section intro-section">
+              <h2>🎮 Mini Arcade 소개</h2>
+              <p>Mini Arcade는 클래식 아케이드 게임을 현대적인 웹 기술로 재탄생시킨 온라인 게임 플랫폼입니다. 
+              HTML5와 TypeScript를 활용하여 구현된 고품질 게임들을 브라우저에서 바로 즐길 수 있습니다.</p>
+              
+              <h3>✨ 주요 특징</h3>
+              <ul>
+                <li><strong>무료 게임:</strong> 모든 게임을 무료로 즐길 수 있습니다</li>
+                <li><strong>브라우저 호환:</strong> 별도 설치 없이 웹브라우저에서 바로 실행</li>
+                <li><strong>모바일 지원:</strong> PC와 모바일 모두에서 최적화된 게임 경험</li>
+                <li><strong>클래식 게임:</strong> 80년대 아케이드 게임의 향수를 느낄 수 있습니다</li>
+              </ul>
+            </section>
+
+            <!-- 게임 가이드 섹션 -->
+            <section class="content-section guide-section">
+              <h2>🕹️ 게임 플레이 가이드</h2>
+              
+              <h3>갤러그 슈터 게임 방법</h3>
+              <div class="game-guide">
+                <div class="guide-item">
+                  <h4>🎯 조작 방법</h4>
+                  <p><strong>PC:</strong> 방향키로 이동, 스페이스바로 발사<br>
+                  <strong>모바일:</strong> 화면 터치로 이동 및 자동 발사</p>
+                </div>
+                
+                <div class="guide-item">
+                  <h4>⭐ 게임 팁</h4>
+                  <p>• 적의 움직임 패턴을 파악하여 효율적으로 공격하세요<br>
+                  • 파워업 아이템을 획득하여 화력을 강화할 수 있습니다<br>
+                  • 방패 아이템으로 일시적인 무적 상태를 유지하세요</p>
+                </div>
+                
+                <div class="guide-item">
+                  <h4>🏆 점수 시스템</h4>
+                  <p>• 적 처치: 기본 점수 획득<br>
+                  • 연속 명중: 콤보 보너스 점수<br>
+                  • 보스 처치: 대량 보너스 점수</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- 게임 선택 영역 -->
             <div class="games-grid" id="games-grid">
               ${this.renderGameCards()}
             </div>
+
+            <!-- 최신 소식 섹션 -->
+            <section class="content-section news-section">
+              <h2>📢 최신 소식</h2>
+              
+              <div class="news-item">
+                <h3>🚀 갤러그 게임 업데이트 (2024.12)</h3>
+                <p>• 모바일 터치 컨트롤 개선으로 더욱 부드러운 조작감 제공<br>
+                • 새로운 파워업 시스템 및 방패 아이템 추가<br>
+                • 보스전 시스템 및 난이도 조절 기능 구현</p>
+              </div>
+              
+              <div class="news-item">
+                <h3>🎮 추가 예정 게임</h3>
+                <p>• <strong>테트리스:</strong> 클래식 블록 퍼즐 게임 개발 중<br>
+                • <strong>스네이크:</strong> 추억의 뱀 게임 제작 준비 중<br>
+                • <strong>퐁:</strong> 최초의 아케이드 게임 구현 예정</p>
+              </div>
+            </section>
+
+            <!-- FAQ 섹션 -->
+            <section class="content-section faq-section">
+              <h2>❓ 자주 묻는 질문</h2>
+              
+              <div class="faq-item">
+                <h3>Q. 게임이 실행되지 않아요</h3>
+                <p>A. 최신 버전의 웹브라우저(Chrome, Firefox, Safari, Edge)를 사용하시고, 
+                JavaScript가 활성화되어 있는지 확인해주세요. 모바일에서는 화면을 세로 또는 가로로 회전해보시기 바랍니다.</p>
+              </div>
+              
+              <div class="faq-item">
+                <h3>Q. 모바일에서도 게임을 할 수 있나요?</h3>
+                <p>A. 네! 모든 게임은 모바일 환경에 최적화되어 있습니다. 
+                터치 컨트롤을 지원하며, 다양한 화면 크기에 맞춰 자동으로 조정됩니다.</p>
+              </div>
+              
+              <div class="faq-item">
+                <h3>Q. 게임 점수가 저장되나요?</h3>
+                <p>A. 현재는 세션 내에서만 점수가 유지됩니다. 
+                추후 업데이트를 통해 최고 점수 저장 기능을 추가할 예정입니다.</p>
+              </div>
+              
+              <div class="faq-item">
+                <h3>Q. 새로운 게임을 요청할 수 있나요?</h3>
+                <p>A. 물론입니다! 원하시는 클래식 게임이 있다면 언제든 의견을 주시기 바랍니다. 
+                사용자 요청을 우선으로 새로운 게임을 개발하고 있습니다.</p>
+              </div>
+            </section>
+
+            <!-- 이용 안내 섹션 -->
+            <section class="content-section terms-section">
+              <h2>📋 이용 안내</h2>
+              
+              <div class="terms-item">
+                <h3>🔒 개인정보 보호</h3>
+                <p>Mini Arcade는 사용자의 개인정보를 수집하지 않으며, 
+                게임 플레이에 필요한 최소한의 정보만을 브라우저에 임시 저장합니다. 
+                모든 데이터는 세션 종료 시 자동으로 삭제됩니다.</p>
+              </div>
+              
+              <div class="terms-item">
+                <h3>🎯 서비스 이용</h3>
+                <p>• 모든 게임은 무료로 제공됩니다<br>
+                • 상업적 목적의 무단 복제 및 배포를 금지합니다<br>
+                • 게임 내 콘텐츠의 저작권은 Mini Arcade에 있습니다</p>
+              </div>
+              
+              <div class="terms-item">
+                <h3>💡 서비스 개선</h3>
+                <p>사용자 경험 향상을 위해 지속적으로 게임을 업데이트하고 있습니다. 
+                버그 신고나 기능 제안이 있으시면 언제든 연락해주시기 바랍니다.</p>
+              </div>
+            </section>
             
             <footer class="arcade-footer">
               <p>&copy; 2024 Mini Arcade - Built with ❤️</p>
@@ -109,29 +221,24 @@ export class MainMenu {
 
         <!-- 우측 광고 영역 -->
         <div id="main-right-ad-area" class="main-ad-area">
-          <div id="main-sidebar-ad-right" class="main-ad-container main-sidebar-ad hidden">
-            <ins
-              class="adsbygoogle main-sidebar-ad-unit"
-              style="display: block"
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-              data-ad-slot="1357924680"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
+          <div id="main-sidebar-ad-right" class="main-ad-container main-sidebar-ad ad-preview">
+            <div class="ad-preview-content vertical">
+              <div class="ad-icon">📱</div>
+              <div class="ad-text">우측 사이드바 광고</div>
+              <div class="ad-size">(160x600)</div>
+              <div class="ad-status">승인 후 표시</div>
+            </div>
           </div>
         </div>
 
         <!-- 하단 광고 영역 -->
         <div id="main-bottom-ad-area" class="main-ad-area">
-          <div id="main-bottom-banner-ad" class="main-ad-container hidden">
-            <ins
-              class="adsbygoogle"
-              style="display: block"
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-              data-ad-slot="2468013579"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
+          <div id="main-bottom-banner-ad" class="main-ad-container ad-preview">
+            <div class="ad-preview-content">
+              <div class="ad-icon">📺</div>
+              <div class="ad-text">하단 배너 광고 영역 (728x90)</div>
+              <div class="ad-status">AdSense 승인 후 광고 표시</div>
+            </div>
           </div>
         </div>
       </div>
@@ -213,9 +320,9 @@ export class MainMenu {
       .main-menu-layout {
         display: grid !important;
         min-height: 100vh !important;
-        height: 100vh !important;
+        height: auto !important;
         grid-template-columns: 180px 1fr 180px;
-        grid-template-rows: minmax(auto, 100px) 1fr minmax(auto, 100px);
+        grid-template-rows: minmax(auto, 100px) auto minmax(auto, 100px);
         grid-template-areas:
           'main-top main-top main-top'
           'main-left main-center main-right'
@@ -227,7 +334,7 @@ export class MainMenu {
           radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
           radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
           linear-gradient(135deg, #0f0f23 0%, #1a1a2e 40%, #16213e 100%);
-        align-items: center;
+        align-items: start;
         justify-items: center;
       }
 
@@ -264,6 +371,75 @@ export class MainMenu {
         border-color: rgba(255, 255, 255, 0.2);
       }
 
+      /* 광고 미리보기 스타일 */
+      .ad-preview {
+        background: linear-gradient(135deg, rgba(255, 165, 0, 0.1) 0%, rgba(255, 69, 0, 0.1) 100%) !important;
+        border: 2px dashed rgba(255, 165, 0, 0.5) !important;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ad-preview::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+      }
+
+      .ad-preview-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .ad-preview-content.vertical {
+        height: 100%;
+        justify-content: center;
+      }
+
+      .ad-icon {
+        font-size: 2rem;
+        margin-bottom: 8px;
+        opacity: 0.7;
+      }
+
+      .ad-text {
+        color: #ff6b35;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+        text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+      }
+
+      .ad-size {
+        color: #ffaa00;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+        opacity: 0.8;
+      }
+
+      .ad-status {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.7rem;
+        font-style: italic;
+        opacity: 0.7;
+      }
+
       /* 사이드바 광고 전용 스타일 */
       .main-sidebar-ad {
         min-height: 250px;
@@ -289,9 +465,11 @@ export class MainMenu {
         width: 100%;
         height: 100%;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
         overflow-y: auto;
+        overflow-x: hidden;
+        padding: 20px 0;
       }
 
       .main-menu {
@@ -300,7 +478,8 @@ export class MainMenu {
         padding: 20px;
         font-family: 'Orbitron', 'Arial', monospace;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
+        min-height: fit-content;
       }
 
       .main-menu::before {
@@ -372,8 +551,10 @@ export class MainMenu {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 25px;
         max-width: 1000px;
-        margin: 0 auto;
+        margin: 30px auto;
         padding: 0 20px;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .game-card {
@@ -561,6 +742,28 @@ export class MainMenu {
           display: none;
         }
 
+        /* 모바일 광고 미리보기 조정 */
+        .ad-preview-content {
+          padding: 8px;
+        }
+
+        .ad-icon {
+          font-size: 1.5rem;
+          margin-bottom: 4px;
+        }
+
+        .ad-text {
+          font-size: 0.8rem;
+        }
+
+        .ad-size {
+          font-size: 0.7rem;
+        }
+
+        .ad-status {
+          font-size: 0.6rem;
+        }
+
         .main-menu {
           padding: 15px;
         }
@@ -630,6 +833,243 @@ export class MainMenu {
         .game-card {
           padding: 18px;
           height: 130px;
+        }
+      }
+
+      /* ===============================
+         새로운 콘텐츠 섹션 스타일
+         =============================== */
+      
+      .content-section {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        margin: 30px 0;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .content-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        pointer-events: none;
+      }
+
+      .content-section h2 {
+        color: #00ff88;
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        position: relative;
+        z-index: 2;
+      }
+
+      .content-section h3 {
+        color: #66ccff;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 20px 0 15px 0;
+        text-shadow: 0 0 8px rgba(102, 204, 255, 0.3);
+        position: relative;
+        z-index: 2;
+      }
+
+      .content-section h4 {
+        color: #ffaa00;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 15px 0 10px 0;
+        text-shadow: 0 0 6px rgba(255, 170, 0, 0.3);
+        position: relative;
+        z-index: 2;
+      }
+
+      .content-section p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .content-section ul {
+        padding-left: 20px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .content-section li {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 10px;
+        list-style-type: none;
+        position: relative;
+        padding-left: 20px;
+      }
+
+      .content-section li::before {
+        content: '✨';
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #00ff88;
+      }
+
+      .content-section strong {
+        color: #ffffff;
+        font-weight: 700;
+      }
+
+      /* 게임 가이드 특별 스타일 */
+      .game-guide {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .guide-item {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .guide-item:hover {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      /* 뉴스 아이템 스타일 */
+      .news-item {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .news-item:hover {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      /* FAQ 아이템 스타일 */
+      .faq-item {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .faq-item:hover {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .faq-item h3 {
+        color: #ffcc00;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        text-shadow: 0 0 6px rgba(255, 204, 0, 0.3);
+      }
+
+      /* 이용약관 아이템 스타일 */
+      .terms-item {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .terms-item:hover {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* 모바일 최적화 */
+      @media (max-width: 768px) {
+        .content-section {
+          padding: 20px;
+          margin: 20px 0;
+        }
+
+        .content-section h2 {
+          font-size: 1.5rem;
+        }
+
+        .content-section h3 {
+          font-size: 1.2rem;
+        }
+
+        .content-section h4 {
+          font-size: 1.1rem;
+        }
+
+        .content-section p,
+        .content-section li {
+          font-size: 1rem;
+        }
+
+        .game-guide {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+
+        .guide-item,
+        .news-item,
+        .faq-item,
+        .terms-item {
+          padding: 15px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .content-section {
+          padding: 15px;
+          margin: 15px 0;
+        }
+
+        .content-section h2 {
+          font-size: 1.3rem;
+        }
+
+        .content-section h3 {
+          font-size: 1.1rem;
+        }
+
+        .content-section h4 {
+          font-size: 1rem;
+        }
+
+        .content-section p,
+        .content-section li {
+          font-size: 0.95rem;
+        }
+
+        .guide-item,
+        .news-item,
+        .faq-item,
+        .terms-item {
+          padding: 12px;
         }
       }
     `;
