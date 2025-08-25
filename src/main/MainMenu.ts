@@ -19,53 +19,65 @@ export class MainMenu {
 
   private getGames(): GameCard[] {
     return [
-    {
-      id: 'galaga',
-      title: `🚀 ${t('galagaTitle')}`,
-      description: t('galagaDescription'),
-      backgroundColor: '#1a1a2e',
-      textColor: '#ffffff',
-      available: true,
-    },
-    {
-      id: 'tetris',
-      title: `🧩 ${t('tetrisTitle')}`,
-      description: t('tetrisDescription'),
-      backgroundColor: '#2d4059',
-      textColor: '#ffffff',
-      available: false,
-    },
-    {
-      id: 'snake',
-      title: `🐍 ${t('snakeTitle')}`,
-      description: t('snakeDescription'),
-      backgroundColor: '#ea5455',
-      textColor: '#ffffff',
-      available: false,
-    },
-    {
-      id: 'pong',
-      title: `🏓 ${t('pongTitle')}`,
-      description: t('pongDescription'),
-      backgroundColor: '#f07b3f',
-      textColor: '#ffffff',
-      available: false,
-    },
-  ];
+      {
+        id: 'galaga',
+        title: `🚀 ${t('galagaTitle')}`,
+        description: t('galagaDescription'),
+        backgroundColor: '#1a1a2e',
+        textColor: '#ffffff',
+        available: true,
+      },
+      {
+        id: 'tetris',
+        title: `🧩 ${t('tetrisTitle')}`,
+        description: t('tetrisDescription'),
+        backgroundColor: '#2d4059',
+        textColor: '#ffffff',
+        available: false,
+      },
+      {
+        id: 'snake',
+        title: `🐍 ${t('snakeTitle')}`,
+        description: t('snakeDescription'),
+        backgroundColor: '#ea5455',
+        textColor: '#ffffff',
+        available: false,
+      },
+      {
+        id: 'pong',
+        title: `🏓 ${t('pongTitle')}`,
+        description: t('pongDescription'),
+        backgroundColor: '#f07b3f',
+        textColor: '#ffffff',
+        available: false,
+      },
+    ];
   }
 
   constructor(router: Router) {
     this.router = router;
     this.container = router.getContainer();
     this.languageManager = LanguageManager.getInstance();
-    
+
     // 언어 변경 리스너 추가
     this.languageManager.addLanguageChangeListener((language: LanguageCode) => {
+      // 현재 컨텐츠 영역의 스크롤 위치 저장
+      const contentArea = document.getElementById('main-content-area');
+      const scrollPosition = contentArea ? contentArea.scrollTop : 0;
+
       // SEO 메타 태그 업데이트
       const mainMenuMeta = seoManager.getMetaDataForMainMenu(language);
       seoManager.updateMetaTags(mainMenuMeta);
-      
+
       this.render();
+
+      // 렌더링 완료 후 컨텐츠 영역 스크롤 위치 복원
+      setTimeout(() => {
+        const newContentArea = document.getElementById('main-content-area');
+        if (newContentArea) {
+          newContentArea.scrollTop = scrollPosition;
+        }
+      }, 0);
     });
   }
 
@@ -108,10 +120,18 @@ export class MainMenu {
               
               <!-- 언어 전환 버튼 -->
               <div class="language-switcher">
-                <button class="language-btn ${this.languageManager.getCurrentLanguage() === 'ko' ? 'active' : ''}" data-lang="ko">
+                <button class="language-btn ${
+                  this.languageManager.getCurrentLanguage() === 'ko'
+                    ? 'active'
+                    : ''
+                }" data-lang="ko">
                   ${t('korean')}
                 </button>
-                <button class="language-btn ${this.languageManager.getCurrentLanguage() === 'en' ? 'active' : ''}" data-lang="en">
+                <button class="language-btn ${
+                  this.languageManager.getCurrentLanguage() === 'en'
+                    ? 'active'
+                    : ''
+                }" data-lang="en">
                   ${t('english')}
                 </button>
               </div>
@@ -124,10 +144,18 @@ export class MainMenu {
               
               <h3>${t('featuresTitle')}</h3>
               <ul>
-                <li><strong>${t('freeGameFeature')}</strong> ${t('freeGameDescription')}</li>
-                <li><strong>${t('browserCompatFeature')}</strong> ${t('browserCompatDescription')}</li>
-                <li><strong>${t('mobileFeature')}</strong> ${t('mobileDescription')}</li>
-                <li><strong>${t('classicFeature')}</strong> ${t('classicDescription')}</li>
+                <li><strong>${t('freeGameFeature')}</strong> ${t(
+      'freeGameDescription'
+    )}</li>
+                <li><strong>${t('browserCompatFeature')}</strong> ${t(
+      'browserCompatDescription'
+    )}</li>
+                <li><strong>${t('mobileFeature')}</strong> ${t(
+      'mobileDescription'
+    )}</li>
+                <li><strong>${t('classicFeature')}</strong> ${t(
+      'classicDescription'
+    )}</li>
               </ul>
             </section>
 

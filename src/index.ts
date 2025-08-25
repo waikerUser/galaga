@@ -74,6 +74,9 @@ class MiniArcade {
       this.currentGameInstance = null;
     }
 
+    // 게임에서 설정된 스타일들 완전 초기화
+    this.resetToMainMenuStyles();
+
     // body에 메인 메뉴 클래스 추가
     document.body.className = 'main-menu-active';
 
@@ -84,6 +87,68 @@ class MiniArcade {
     seoManager.addStructuredData();
 
     this.mainMenu.render();
+
+    // 메인 메뉴 렌더링 완료 후 컨텐츠 영역을 맨 위로 스크롤
+    setTimeout(() => {
+      const contentArea = document.getElementById('main-content-area');
+      if (contentArea) {
+        contentArea.scrollTop = 0;
+        console.log('📍 컨텐츠 영역 스크롤 위치 초기화');
+      }
+    }, 0);
+  }
+
+  private resetToMainMenuStyles(): void {
+    console.log('🔄 메인 메뉴 스타일로 복원 중...');
+
+    // HTML 및 Body 요소의 게임 스타일 완전 제거
+    const htmlElement = document.documentElement;
+    const bodyElement = document.body;
+
+    // 게임에서 설정된 모든 인라인 스타일 제거
+    htmlElement.removeAttribute('style');
+    bodyElement.removeAttribute('style');
+
+    // 게임 관련 클래스들 제거
+    bodyElement.classList.remove(
+      'game-active',
+      'galaga-active',
+      'coming-soon-active'
+    );
+
+    // MutationObserver 정리
+    const mainLayout = document.getElementById('main-layout');
+    if (mainLayout) {
+      mainLayout.removeAttribute('style');
+
+      if ((mainLayout as any).__styleObserver) {
+        ((mainLayout as any).__styleObserver as MutationObserver).disconnect();
+        delete (mainLayout as any).__styleObserver;
+        console.log('🔍 MutationObserver 정리됨');
+      }
+
+      mainLayout.classList.remove('main-layout-fixed');
+    }
+
+    // 게임 컨테이너 정리
+    const gameContainer = document.querySelector('#galaga-game-container');
+    if (gameContainer) {
+      (gameContainer as HTMLElement).removeAttribute('style');
+    }
+
+    // 모든 요소의 게임 관련 스타일 초기화
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach((element) => {
+      const htmlElement = element as HTMLElement;
+      if (htmlElement.style) {
+        htmlElement.style.pointerEvents = '';
+        htmlElement.style.userSelect = '';
+        htmlElement.style.touchAction = '';
+        htmlElement.style.cursor = '';
+      }
+    });
+
+    console.log('✅ 메인 메뉴 스타일 복원 완료 (컨텐츠 영역 스크롤)');
   }
 
   private async loadGalagaGame(): Promise<void> {
@@ -135,23 +200,37 @@ class MiniArcade {
             <div id="galaga-game-container">
               <!-- 게임 헤더 (메뉴로 돌아가기) -->
               <div class="game-header">
-                <button id="back-to-menu" class="back-btn">← ${t('backToMenu')}</button>
+                <button id="back-to-menu" class="back-btn">← ${t(
+                  'backToMenu'
+                )}</button>
                 <h2 class="game-title">🚀 ${t('galagaTitle')}</h2>
               </div>
 
               <!-- 게임 UI (점수, 생명, 스테이지) -->
               <div id="game-ui">
                 <div class="ui-left">
-                  <div class="stat-item">${t('score')}: <span id="score">0</span></div>
-                  <div class="stat-item">${t('stage')}: <span id="stage">1</span></div>
-                  <div class="stat-item">${t('items')}: <span id="items-count">0</span></div>
+                  <div class="stat-item">${t(
+                    'score'
+                  )}: <span id="score">0</span></div>
+                  <div class="stat-item">${t(
+                    'stage'
+                  )}: <span id="stage">1</span></div>
+                  <div class="stat-item">${t(
+                    'items'
+                  )}: <span id="items-count">0</span></div>
                 </div>
                 <div class="ui-center">
-                  <div class="stat-item">${t('missile')}: <span id="missile-count">1</span></div>
-                  <div class="stat-item">${t('tier')}: <span id="missile-tier">T1</span></div>
+                  <div class="stat-item">${t(
+                    'missile'
+                  )}: <span id="missile-count">1</span></div>
+                  <div class="stat-item">${t(
+                    'tier'
+                  )}: <span id="missile-tier">T1</span></div>
                 </div>
                 <div class="ui-right">
-                  <div class="stat-item">${t('lives')}: <span id="lives">3</span></div>
+                  <div class="stat-item">${t(
+                    'lives'
+                  )}: <span id="lives">3</span></div>
                 </div>
               </div>
 
@@ -187,7 +266,9 @@ class MiniArcade {
               <div id="start-screen" class="screen">
                 <h1>🚀 ${t('galagaTitle')}</h1>
                 <p>${t('galagaDescription')}</p>
-                <button id="start-btn" class="game-btn">${t('gameStart')}</button>
+                <button id="start-btn" class="game-btn">${t(
+                  'gameStart'
+                )}</button>
               </div>
 
               <!-- 난이도 선택 화면 -->
@@ -224,8 +305,12 @@ class MiniArcade {
                   <p>정확도: <span id="final-accuracy" class="highlight">0%</span></p>
                 </div>
                 <div class="game-over-buttons">
-                  <button id="restart-btn" class="game-btn">${t('restart')}</button>
-                  <button id="menu-btn" class="game-btn secondary">${t('backToMenu')}</button>
+                  <button id="restart-btn" class="game-btn">${t(
+                    'restart'
+                  )}</button>
+                  <button id="menu-btn" class="game-btn secondary">${t(
+                    'backToMenu'
+                  )}</button>
                 </div>
               </div>
 
@@ -382,6 +467,9 @@ class MiniArcade {
 
   private showComingSoon(gameName: string): void {
     console.log(`🔜 ${gameName} - 출시 예정`);
+
+    // 게임에서 설정된 스타일들 완전 초기화
+    this.resetToMainMenuStyles();
 
     document.body.className = 'coming-soon-active';
 
